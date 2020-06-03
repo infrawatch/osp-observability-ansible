@@ -1,2 +1,25 @@
 ---
 # tasks file for test-role
+- name: "Print out the params"
+  debug:
+    var: hostvars[inventory_hostname]
+
+- name: "Print role_vars"
+  debug:
+    var: role_vars
+
+- name: "Remove file"
+  file:
+    path: /home/cloud-user/test-file
+    state: absent
+
+- name: "Add a file to the target node"
+  file:
+    path: /home/cloud-user/test-file
+    state: touch
+    mode: u=rw,g=r,o=r
+
+- name: "put vars into a file"
+  shell: |
+    echo "role_vars: {{ role_vars }}" > /home/cloud-user/test-file
+    echo "collectd_vars: {{ collectd_vars }} " >> /home/cloud-user/test-file
