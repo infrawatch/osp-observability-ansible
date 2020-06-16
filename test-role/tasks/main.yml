@@ -19,7 +19,11 @@
     state: touch
     mode: u=rw,g=r,o=r
 
-- name: "put vars into a file"
+- name: "Copy config vars into file"
+  copy:
+    content: "{{role_vars}}"
+    dest: /home/cloud-user/test-file
+
+- name: "put other vars into a file"
   shell: |
-    echo "role_vars: {{ role_vars }}" > /home/cloud-user/test-file
     echo "collectd_vars: {{ collectd_vars }} " >> /home/cloud-user/test-file
