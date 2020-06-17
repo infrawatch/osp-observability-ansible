@@ -1,0 +1,4 @@
+---
+- hosts: collectd_hosts
+  roles:
+    - test-role

@@ -1,2 +1,84 @@
 ---
 # defaults file for test-role
+# These defaults mirror the defaults set for corresponding parameters in TripleO
+keystone_region: "regionOne"
+#NOTE(efoley) TripleO does not provide defaults for these values in the template, they are probably passed in from elsewhere.
+#container_collectd_image: {get_param: ContainerCollectdImage}
+#container_collectd_config_image: {get_param: ContainerCollectdConfigImage}
+metrics_qdr_port: 5666
+metrics_qdr_username: 'guest'
+metrics_qdr_password: 'guest'
+monitoring_subscription_collectd: 'overcloud-collectd'
+collectd_connection_type: 'amqp1'
+collectd_interval: 120
+collectd_default_plugins:
+      - cpu
+      - df
+      - disk
+      - hugepages
+      - interface
+      - load
+      - memory
+      - processes
+      - unixsock
+      - uptime
+collectd_extra_plugins: {}
+collectd_server: ''
+collectd_server_port: '25826'
+collectd_username: ''
+collectd_password: ''
+collectd_security_level: 'None'
+collectd_gnocchi_auth_mode: 'keystone'
+collectd_gnocchi_protocol: 'http'
+collectd_gnocchi_server: nil
+collectd_gnocchi_port: 8041
+collectd_gnocchi_user: nil
+collectd_gnocchi_keyston_auth_url: nil
+collectd_gnocchi_keystone_username: nil
+collectd_gnocchi_keystone_userid: nil
+collectd_gnocchi_keystone_password: nil
+collectd_gnocchi_keystone_project_id: nil
+collectd_gnocchi_keystone_project_name: nil
+collectd_gnocchi_keystone_user_domain_id: nil
+collectd_gnocchi_keystone_user_domain_name: nil
+collectd_gnocchi_keystone_project_domain_id: nil
+collectd_gnocchi_keystone_project_domain_name: nil
+collectd_gnocchi_keystone_region_name: nil
+collectd_gnocchi_keystone_interface: nil
+collectd_gnocchi_keystone_endpoint: nil
+collectd_gnocchi_resource_type: 'collectd'
+collectd_gnocchi_batch_size: 10
+collectd_sql_alchemy_enable: false
+collectd_sql_alchemy_log_messages: 'info'
+collectd_sql_alchemy_bind_host: 'localhost'
+collectd_amqp_host: nil
+collectd_amqp_port: 5666
+collectd_amqp_user: 'guest'
+collectd_amqp_password: 'guest'
+collectd_amqp_transport_name: 'metrics'
+collectd_amqp_address: 'collectd'
+collectd_amqp_instances: {}
+collectd_amqp_retry_delay: 1
+collectd_amqp_interval: -666
+collectd_sensubility_enable: false
+collectd_sensubility_exec_sudo_rule: ''
+collectd_sensubility_log_level: 'WARNING'
+collectd_sensubility_connection: 'amqp://sensu:sensu@localhost:5672//sensu'
+collectd_sensubility_keepalive_interval: 20
+collectd_sensubility_tmp_dir: '/var/tmp/collectd-sensubility-checks'
+collectd_sensubility_shell_path: '/usr/bin/sh'
+collectd_sensubility_worker_count: 2
+collectd_sensubility_checks: {}
+collectd_container_healthcheck_enable: true
+# TODO(efoley): Add the default healthcheck command
+collectd_container_healthcheck_command: ''
+collectd_container_healthcheck_interval: 10
+collectd_container_healthcheck_handlers: []
+collectd_container_healthcheck_occurances: 3
+collectd_container_healthcheck_refresh: 90
+enable_stf_enable: false
+collectd_enable_mcelog: false
+
+# vars used for debugging OoO
+role_vars: "role_vars are only valid for debugging OoO"
+collectd_vars: "collectd_vars only valid for debugging OoO"
