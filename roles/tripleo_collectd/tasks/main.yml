@@ -1,0 +1,15 @@
+---
+# NOTE: Anything that is in here is done every time you call the tripleo_role
+# This means you should add variable parsing and setting here.
+
+- name: Set-up vars based on THT inputs
+  debug:
+    msg: "Pretending to parse vars; file: roles/tripleo_collectd/tasks/main.yml"
+
+- name: Report what deployment stage we're at
+  debug:
+    msg: "This is deployment stage {{ deploy_stage }}"
+
+# TODO:  Above this line, set up the configs, and do whatever needs to be done before each stage can be run
+- name: Include tasks for deploy stage
+  include_tasks: "{{ deploy_stage }}.yml"
