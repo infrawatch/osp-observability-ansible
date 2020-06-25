@@ -1,4 +1,4 @@
 ---
 - hosts: collectd_hosts
   roles:
-    - test-role
+    - collectd_config

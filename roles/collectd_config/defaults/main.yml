@@ -22,7 +22,7 @@ collectd_default_plugins:
       - processes
       - unixsock
       - uptime
-collectd_extra_plugins: {}
+collectd_extra_plugins: []
 collectd_server: ''
 collectd_server_port: '25826'
 collectd_username: ''
