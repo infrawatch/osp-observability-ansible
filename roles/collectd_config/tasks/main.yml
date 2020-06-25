@@ -82,23 +82,45 @@
   debug:
     var: collectd_settings
 
+- set_fact:
+    conf_output_dir: "/home/cloud-user/"
+
 - name: "Remove file"
   file:
-    path: /home/cloud-user/test-file
+    path: "{{ item }}"
     state: absent
+  with_items:
+    - "{{ conf_output_dir }}/test-file"
+    - "{{ conf_output_dir }}/cpu.conf"
 
 - name: "Add a file to the target node"
   file:
-    path: /home/cloud-user/test-file
+    path: "{{ conf_output_dir }}/test-file"
     state: touch
     mode: u=rw,g=r,o=r
 
 - name: "Copy config vars into file"
   copy:
     content: "{{role_vars}}"
-    dest: /home/cloud-user/test-file
+    dest: "{{ conf_output_dir }}/test-file"
 
 - name: "put other vars into a file"
   shell: |
-    echo "collectd_vars: {{ collectd_vars }} " >> /home/cloud-user/test-file
-    echo "plugins:  {{ collectd_plugins }}" >> /home/cloud-user/test-file
+    echo "collectd_vars: {{ collectd_vars }} " >> {{ conf_output_dir }}/test-file
+    echo "plugins:  {{ collectd_plugins }}" >> {{ conf_output_dir }}/test-file
+
+- name: "Create cpu config"
+  template:
+    src: cpu.conf.j2
+    dest: "{{ conf_output_dir }}/cpu.conf"
+  vars:
+    cpu: "{{ collectd_settings.plugin.cpu }}"
+  when: "'cpu' in {{ collectd_plugins }}"
+
+- name: "Create df config"
+  template:
+    src: df.conf.j2
+    dest: "{{ conf_output_dir }}/df.conf"
+  vars:
+    df: "{{ collectd_settings.plugin.df }}"
+  when: "{{ 'df' in collectd_plugins }}"
