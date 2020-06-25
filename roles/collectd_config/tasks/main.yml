@@ -1,12 +1,86 @@
 ---
 # tasks file for test-role
-- name: "Print out the params"
-  debug:
-    var: hostvars[inventory_hostname]
+# Tasks to replace the conditions section from THT
+# Set up defaults to set bools to false
 
-- name: "Print role_vars"
+- name: Set up conditionals
+  set_fact:
+    amqp_connection: "{{ (collectd_connection_type == 'amqp1')|default(false) }}"
+    amqp_default_connection: "{{ (collectd_amqp_host == 'nil')|default(false) }}"
+    amqp_default_interval: "{{ (collectd_amqp_interval|int == -666)|default(false) }}"
+    collectd_connection: "{{ (collectd_connection_type == 'network')|default(false) }}"
+    gnocchi_connection:  "{{ (collectd_connection_type == 'gnocchi')|default(false) }}"
+    gnocchi_auth_basic:  "{{ (collectd_gnocchi_auth_mode == 'basic')|default(false) }}"
+    gnocchi_default_connection: "{{ ((collectd_gnocchi_server == 'nil') and (collectd_gnocchi_keystone_endpoint == 'nil'))|default(false) }}"
+    sensubility_needs_sudo: "{{ (not (collectd_sensubility_exec_sudo_rule == ''))| default(false) }}"
+
+- debug:
+    var: "{{ item }}"
+  with_items:
+    - amqp_connection
+    - amqp_default_connection
+    - amqp_default_interval
+    - collectd_connection
+    - gnocchi_connection
+    - gnocchi_auth_basic
+    - collectd_gnocchi_auth_mode
+    - gnocchi_default_connection
+    - sensubility_needs_sudo
+    - collectd_extra_plugins
+
+#TODO: set up this in default/main.yml, and then reset it to "" if enable_stf_plugin
+- name: "Update plugin list"
+  set_fact:
+    collectd_extra_plugins: "{{ (collectd_extra_plugins + 'cpu df load connectivity intel_rdt ipmi procevent'.split() ) | unique }}"
+  when: enable_stf|bool
+
+- debug:
+    var: collectd_extra_plugins
+
+# This can probably be called enable plugin, or create plugin list, and can
+# enable plugins based whether STF, etc is enabled
+- name: Set additional facts based on configs
+  set_fact:
+    # Are these lists or dicts? Check that the defaults are set appropriately
+    # Q: What is the motivation behind this one?
+    collectd_plugins: "{{ (collectd_default_plugins + collectd_extra_plugins) |unique }}"
+
+- debug:
+    var: collectd_plugins
+
+- name: Set up collectd plugin settings
+  set_fact:
+    collectd_settings:
+      # this might be for TripleO; if so, it needs to be dealth with by TripleO
+      enable_file_logging: true
+      manage_repo: true
+      purge: true
+      recurse: true
+      minimum_version: true
+      interval: "{{ collectd_interval }}"
+      plugin:
+        unixsock:
+          socketgroup: "root"
+          socketfile: "/var/run/collectd-socket"
+          deletesocket: true
+        cpu:
+          reportbycpu: true
+          reportbystate: true
+          reportnumcpu: false
+          valuespercentage: true
+        df:
+          reportbydevice: true
+          fstypes: ['xfs']
+        load:
+          reportrelative: true
+        virt:
+          connection: "qemu:///system"
+          extra_stats: "cpu_util disk disk_err pcpu job_stats_background perf vcpupin"
+          hostname_format: "hostname"
+
+- name: check settings
   debug:
-    var: role_vars
+    var: collectd_settings
 
 - name: "Remove file"
   file:
@@ -27,3 +101,4 @@
 - name: "put other vars into a file"
   shell: |
     echo "collectd_vars: {{ collectd_vars }} " >> /home/cloud-user/test-file
+    echo "plugins:  {{ collectd_plugins }}" >> /home/cloud-user/test-file
