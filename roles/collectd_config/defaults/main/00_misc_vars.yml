@@ -10,7 +10,12 @@ metrics_qdr_username: 'guest'
 metrics_qdr_password: 'guest'
 monitoring_subscription_collectd: 'overcloud-collectd'
 collectd_connection_type: 'amqp1'
+# used in collectd.conf
 collectd_interval: 120
+# TODO: Move collectd_default_plugins and collectd_extra_plugins to OoO role
+# Here, there should be a list of enabled plugins only i.e.
+collectd_plugins: []
+# TODO: Move to tripleo
 collectd_default_plugins:
       - cpu
       - df
@@ -22,7 +27,9 @@ collectd_default_plugins:
       - processes
       - unixsock
       - uptime
+#TODO: move to tripleo
 collectd_extra_plugins: []
+#
 collectd_server: ''
 collectd_server_port: '25826'
 collectd_username: ''
@@ -76,8 +83,16 @@ collectd_container_healthcheck_interval: 10
 collectd_container_healthcheck_handlers: []
 collectd_container_healthcheck_occurances: 3
 collectd_container_healthcheck_refresh: 90
+# There enable_* are definitely OoO, and should be moved there
 enable_stf_enable: false
 collectd_enable_mcelog: false
+
+# this might be for TripleO; if so, it needs to be dealt with by TripleO
+enable_file_logging: true
+collectd_manage_repo: true
+collectd_purge: true
+collectd_recurse: true
+collectd_minimum_version: true
 
 # vars used for debugging OoO
 role_vars: "role_vars are only valid for debugging OoO"

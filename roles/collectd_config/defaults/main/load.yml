@@ -1,0 +1,3 @@
+---
+# defaults for load plugin
+collectd_plugin_load_reportrelative: true

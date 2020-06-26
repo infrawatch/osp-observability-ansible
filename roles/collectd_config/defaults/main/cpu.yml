@@ -1,0 +1,4 @@
+collectd_plugin_cpu_reportbycpu: true
+collectd_plugin_cpu_reportbystate: true
+collectd_plugin_cpu_reportnumcpu: false
+collectd_plugin_cpu_valuespercentage: true

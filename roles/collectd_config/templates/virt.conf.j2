@@ -1,0 +1,9 @@
+LoadPlugin virt
+
+<Plugin virt>
+   Connection {{ collectd_plugin_virt_connection }}
+   RefreshInterval {{ collectd_plugin_virt_refreshinterval }}
+   HostnameFormat {{ collectd_plugin_virt_hostnameformat }}
+   PluginInstanceFormat {{ collectd_plugin_virt_plugininstanceformat }}
+   ExtraStats "{{ collectd_plugin_extrastats }}"
+</Plugin>

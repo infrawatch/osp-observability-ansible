@@ -48,40 +48,7 @@
 - debug:
     var: collectd_plugins
 
-- name: Set up collectd plugin settings
-  set_fact:
-    collectd_settings:
-      # this might be for TripleO; if so, it needs to be dealth with by TripleO
-      enable_file_logging: true
-      manage_repo: true
-      purge: true
-      recurse: true
-      minimum_version: true
-      interval: "{{ collectd_interval }}"
-      plugin:
-        unixsock:
-          socketgroup: "root"
-          socketfile: "/var/run/collectd-socket"
-          deletesocket: true
-        cpu:
-          reportbycpu: true
-          reportbystate: true
-          reportnumcpu: false
-          valuespercentage: true
-        df:
-          reportbydevice: true
-          fstypes: ['xfs']
-        load:
-          reportrelative: true
-        virt:
-          connection: "qemu:///system"
-          extra_stats: "cpu_util disk disk_err pcpu job_stats_background perf vcpupin"
-          hostname_format: "hostname"
-
-- name: check settings
-  debug:
-    var: collectd_settings
-
+# TODO: Move this to defaults.yml
 - set_fact:
     conf_output_dir: "/home/cloud-user/"
 
@@ -91,36 +58,21 @@
     state: absent
   with_items:
     - "{{ conf_output_dir }}/test-file"
-    - "{{ conf_output_dir }}/cpu.conf"
+    - "{{ conf_output_dir }}/collectd.conf.d"
+    - "{{ conf_output_dir }}/collectd.conf"
 
-- name: "Add a file to the target node"
+- name: "Create config dir"
   file:
-    path: "{{ conf_output_dir }}/test-file"
-    state: touch
-    mode: u=rw,g=r,o=r
+    path: "{{ conf_output_dir }}/collectd.conf.d"
+    state: directory
 
-- name: "Copy config vars into file"
-  copy:
-    content: "{{role_vars}}"
-    dest: "{{ conf_output_dir }}/test-file"
-
-- name: "put other vars into a file"
-  shell: |
-    echo "collectd_vars: {{ collectd_vars }} " >> {{ conf_output_dir }}/test-file
-    echo "plugins:  {{ collectd_plugins }}" >> {{ conf_output_dir }}/test-file
-
-- name: "Create cpu config"
+- name: "Create core collectd config"
   template:
-    src: cpu.conf.j2
-    dest: "{{ conf_output_dir }}/cpu.conf"
-  vars:
-    cpu: "{{ collectd_settings.plugin.cpu }}"
-  when: "'cpu' in {{ collectd_plugins }}"
+    src: collectd.conf.j2
+    dest: "{{ conf_output_dir }}/collectd.conf"
 
-- name: "Create df config"
+- name: "Create plugin config files"
   template:
-    src: df.conf.j2
-    dest: "{{ conf_output_dir }}/df.conf"
-  vars:
-    df: "{{ collectd_settings.plugin.df }}"
-  when: "{{ 'df' in collectd_plugins }}"
+    src: "{{ item }}.conf.j2"
+    dest: "{{ conf_output_dir }}/collectd.conf.d/{{ item }}.conf"
+  loop: "{{ collectd_plugins }}"
