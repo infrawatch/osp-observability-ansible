@@ -94,6 +94,8 @@ collectd_purge: true
 collectd_recurse: true
 collectd_minimum_version: true
 
+collectd_conf_output_dir: "/etc/collectd.conf.d/"
+
 # vars used for debugging OoO
 role_vars: "role_vars are only valid for debugging OoO"
 collectd_vars: "collectd_vars only valid for debugging OoO"

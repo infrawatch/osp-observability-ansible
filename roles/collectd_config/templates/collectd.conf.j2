@@ -7,3 +7,7 @@ Interval "{{ collectd_interval }}"
 Timeout 2
 ReadThreads 5
 WriteThreads 5
+
+<Include "{{ collectd_conf_output_dir}}" >
+  Filter "*.conf"
+</Include>
