@@ -1,0 +1,10 @@
+LoadPlugin cpu
+
+<Plugin cpu>
+  ReportByState {{ collectd_plugin_cpu_reportbystate }}
+  ReportByCpu {{ collectd_plugin_cpu_reportbystate }}
+  ValuesPercentage {{ collectd_plugin_cpu_valuespercentage }}
+  ReportNumCpu {{ collectd_plugin_cpu_reportnumcpu }}
+  ReportGuestState true
+  SubtractGuestState true
+</Plugin>

@@ -1,0 +1,7 @@
+---
+# defaults for configuring the df plugin
+collectd_plugin_df_reportbydevice: true
+#TODO: make this do something useful
+collectd_plugin_df_fstypes: ['xfs']
+
+#TODO: Add if def in templates for non-required plugin options

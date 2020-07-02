@@ -1,0 +1,13 @@
+---
+- hosts: collectd_hosts
+  roles:
+    - collectd_config
+  tags: test
+
+- hosts: collectd_hosts
+  name: TripleO roles test
+  tasks:
+    - name: Do some TripleO deploy stage
+      import_role:
+        name: tripleo_collectd
+  tags: tripleo

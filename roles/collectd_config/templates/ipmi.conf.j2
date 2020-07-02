@@ -1,0 +1,35 @@
+LoadPlugin ipmi
+
+# TODO: add logic for generating the Instance members
+<Plugin ipmi>
+    # TODO: Is a local instance required?
+    <Instance "local">
+       Username {{ collectd_plugin_ipmi_username }}
+       Password {{ collectd_plugin_ipmi_password }}
+#		Sensor "some_sensor"
+#		Sensor "another_one"
+#		IgnoreSelected false
+#		NotifySensorAdd false
+#		NotifySensorRemove true
+#		NotifySensorNotPresent false
+#		NotifyIPMIConnectionState false
+#		SELEnabled false
+#		SELClearEvent false
+    </Instance>
+#	<Instance "remote">
+#		Host "server.example.com"
+#		Address  "1.2.3.4"
+#		Username "user"
+#		Password "secret"
+#		#AuthType "md5"
+#		Sensor "some_sensor"
+#		Sensor "another_one"
+#		IgnoreSelected false
+#		NotifySensorAdd false
+#		NotifySensorRemove true
+#		NotifySensorNotPresent false
+#		NotifyIPMIConnectionState false
+#		SELEnabled false
+#		SELClearEvent false
+#	</Instance>
+</Plugin>
