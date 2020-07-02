@@ -1,0 +1,4 @@
+skip_list:
+   - '102'  # No Jinja2 in when
+   - '303'  # systemctl used in place of systemd module
+   - '502'  # All tasks should be named
