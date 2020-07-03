@@ -2,3 +2,6 @@ skip_list:
    - '102'  # No Jinja2 in when
    - '303'  # systemctl used in place of systemd module
    - '502'  # All tasks should be named
+   - '602'  # Don't compare to empty string
+   - '701'  # Role info should contain platforms
+   - '703'  # Should change default metadata
