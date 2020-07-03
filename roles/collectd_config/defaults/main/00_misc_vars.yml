@@ -15,21 +15,7 @@ collectd_interval: 120
 # TODO: Move collectd_default_plugins and collectd_extra_plugins to OoO role
 # Here, there should be a list of enabled plugins only i.e.
 collectd_plugins: []
-# TODO: Move to tripleo
-collectd_default_plugins:
-      - cpu
-      - df
-      - disk
-      - hugepages
-      - interface
-      - load
-      - memory
-      - processes
-      - unixsock
-      - uptime
-#TODO: move to tripleo
-collectd_extra_plugins: []
-#
+
 collectd_server: ''
 collectd_server_port: '25826'
 collectd_username: ''
@@ -84,8 +70,6 @@ collectd_container_healthcheck_handlers: []
 collectd_container_healthcheck_occurances: 3
 collectd_container_healthcheck_refresh: 90
 # There enable_* are definitely OoO, and should be moved there
-enable_stf_enable: false
-collectd_enable_mcelog: false
 
 # this might be for TripleO; if so, it needs to be dealt with by TripleO
 enable_file_logging: true

@@ -12,5 +12,4 @@
 - name: import provision_mcelog
   import_role:
     name: tripleo_provision_mcelog
-  when: {{ collectd_enable_mcelog }}
-
+  when: "{{ collectd_enable_mcelog }}"

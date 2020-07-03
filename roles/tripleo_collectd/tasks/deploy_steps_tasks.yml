@@ -1,7 +1,7 @@
 ---
 - name: set enable_sensubility fact
   set_fact:
-    enable_sensubility: {{ collectd_sensubility_enable }}
+    enable_sensubility: "{{ collectd_sensubility_enable }}"
 
 - name: Configure rsyslog for container healthchecks
   when:

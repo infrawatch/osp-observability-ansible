@@ -10,6 +10,109 @@
   debug:
     msg: "This is deployment stage {{ deploy_stage }}"
 
+- name: Set up conditionals
+  set_fact:
+    amqp_connection: "{{ (collectd_connection_type == 'amqp1')|default(false) }}"
+    amqp_default_connection: "{{ (collectd_amqp_host == 'nil')|default(false) }}"
+    amqp_default_interval: "{{ (collectd_amqp_interval|int == -666)|default(false) }}"
+    collectd_connection: "{{ (collectd_connection_type == 'network')|default(false) }}"
+    gnocchi_connection:  "{{ (collectd_connection_type == 'gnocchi')|default(false) }}"
+    gnocchi_auth_basic:  "{{ (collectd_gnocchi_auth_mode == 'basic')|default(false) }}"
+    gnocchi_default_connection: "{{ ((collectd_gnocchi_server == 'nil') and (collectd_gnocchi_keystone_endpoint == 'nil'))|default(false) }}"
+    sensubility_needs_sudo: "{{ (collectd_sensubility_exec_sudo_rule != '')| default(false) }}"
+
+# TODO: Add default for enable_stf, enable_sqlalchemy_collectd, enable_sensubility,
+- debug:
+    var: "{{ item }}"
+  with_items:
+    - amqp_connection
+    - amqp_default_connection
+    - amqp_default_interval
+    - collectd_connection
+    - gnocchi_connection
+    - gnocchi_auth_basic
+    - collectd_gnocchi_auth_mode
+    - gnocchi_default_connection
+    - sensubility_needs_sudo
+    - collectd_extra_plugins
+
+#TODO: set up this in default/main.yml, and then reset it to "" if enable_stf_plugin
+- name: "Update plugin list"
+  set_fact:
+    collectd_extra_plugins: "{{ (collectd_extra_plugins + 'cpu df load connectivity intel_rdt ipmi procevent'.split() ) | unique }}"
+  when: enable_stf|bool
+
+- debug:
+    var: collectd_extra_plugins
+
+- name: Set up amqp connection to collectd
+  when: amqp_connection
+  block:
+    - set_fact:
+        # TODO: These values need some defaults in collectd
+        collectd_plugin_amqp1_transport: "{{ tripleo_collectd_amqp_transport_name }}"
+        collectd_plugin_amqp1_address: "{{ tripleo_collectd_amqp_address }}"
+        collectd_plugin_amqp1_instances: "{{ tripleo_collectd_amqp_instances }}"
+        collectd_plugin_amqp1_retrydelay: "{{ tripleo_collectd_amqp_retry_delay }}"
+    - set_fact:
+      # TODO: Clean up this conditional parsing, and consolodate the logic
+      # here, instead of setting a default above
+         collectd_plugin_amqp_interval: "{{ tripleo_collectd_amqp_interval }}"
+      when: "{{ not amqp_default_interval }}"
+    - set_fact:
+        # TODO: Figure out what to do with this, maybe do the hiera data
+        # lookup here or in THT
+        collectd_plugin_amqp1_host: "{{ lookup('hiera'), RoleNameMetricsQdrNetwork }}"
+        collectd_plugin_amqp1_port: "{{ tripleo_collectd_amqp_port  }}"
+        collectd_plugin_amqp1_user: "{{ tripleo_collectd_amqp_user }}"
+        collectd_plugin_amqp1_password: "{{ tripleo_collectd_amqp_password }}"
+      when: "{{ amqp_default_connection }}"
+
+- name: Set up collectd connection to external collectd instance
+  when: collectd_connection
+  set_fact:
+    # This might have to be set up as a list of dicts, depending on how it's
+    # treated in collectd_config
+    collectd_plugin_network_server: "{{ tripleo_collectd_server }}"
+    collectd_plugin_network_server_port: "{{ tripleo_collectd_port }}"
+    collectd_plugin_network_server_username: "{{ tripleo_collectd_username }}"
+    collectd_plugin_network_server_password: "{{ tripleo_collectd_password }}"
+    collectd_plugin_network_server_securitylevel: "{{ tripleo_collectd_securitylevel }}"
+
+- name: Enable sqlalchemy
+  # TODO: check does the puppet tripleo::...::collectd::enable_sqlalchemy role
+  # do anything besides set up the config
+  # https://github.com/openstack/puppet-tripleo/blob/master/manifests/profile/base/metrics/collectd/sqlalchemy_collectd.pp
+  when: enable_sqlalchemy_collectd
+  set_fact:
+    todo: true
+
+- name: Connect to gnocchi
+  when: gnocchi_connection
+  # TODO: Write ansible for python modules
+  # Also, update the list of enabled plugins when using plugins that are not
+  # explicitly mentioned already
+  set_fact:
+    todo: true
+
+# Do I need to break these into separate support tasks?
+- name: "Configure collectd to run collectd-sensubility via collectd-exec"
+  set_fact:
+    todo: true
+  when: enable_sensubility
+# This can probably be called enable plugin, or create plugin list, and can
+# enable plugins based whether STF, etc is enabled
+
+- debug:
+    var: collectd_default_plugins
+
+- name: Update enabled plugins list
+  set_fact:
+    collectd_plugins: "{{ (collectd_default_plugins + collectd_extra_plugins) | unique }}"
+
+- debug:
+    var: collectd_plugins
+
 # TODO:  Above this line, set up the configs, and do whatever needs to be done before each stage can be run
 - name: Include tasks for deploy stage
   include_tasks: "{{ deploy_stage }}.yml"
