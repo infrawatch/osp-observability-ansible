@@ -1,0 +1,8 @@
+---
+# Defults for logfile
+collectd_plugin_logfile_loglevel: info
+collectd_plugin_logfile_file: "/var/log/collectd.log"
+collectd_plugin_logfile_timestamp: true
+
+# Optional vars
+# collectd_plugin_logfile_printseverity: false
