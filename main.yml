@@ -6,8 +6,8 @@
   vars:
     collectd_conf_output_dir: "/etc/collectd.conf.d"
     collectd_plugins:
-      - amqp1
-      - ceph
+      # - amqp1
+      # - ceph
       - connectivity
       - cpu
       - df
@@ -18,16 +18,16 @@
       # TODO: reenable this when there are reasonable defaults or the template has been updated
       # - ipmi
       - load
-      - logfile
+      # - logfile
       - memory
       - network
       - ovs_stats
       - processes
       - procevent
-      - python
+      # - python
       - unixsock
       - uptime
-      - virt
+      # - virt
 
 - hosts: collectd_hosts
   name: TripleO roles test
