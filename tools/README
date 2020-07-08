@@ -1,0 +1,30 @@
+Template generate
+-----------------
+
+This tool is used to create config templates and defaults file for the collectd_config role.
+Currently works only for simple configs (i.e. only string in the config
+params)
+
+The script reads a yaml file which has options for each plugin, whether
+the options are mandatory and what the default value is.
+e.g.
+  my_plugin:
+    config1:
+      mandatory: true
+      default: "my_default_value"
+    config2:
+      mandatory: false
+      default: "some_other_value"
+
+The script then generates a config template (to go under
+collectd_config/templates/<plugin>.conf.j2 and a defaults file (for
+collectd_config/main/<plugin>.yml
+
+All non-mandatory defaults are written into the defaults file and
+commented out.
+
+
+Usage::
+
+  python template_generator.py
+
