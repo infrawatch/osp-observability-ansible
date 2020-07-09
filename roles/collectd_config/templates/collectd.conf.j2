@@ -8,6 +8,10 @@ Timeout 2
 ReadThreads 5
 WriteThreads 5
 
+{% if "logfile" in collectd_plugins %}
+LoadPlugin "logfile"
+{% endif %}
+
 <Include "{{ collectd_conf_output_dir}}" >
   Filter "*.conf"
 </Include>
