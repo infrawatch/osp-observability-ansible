@@ -1,20 +1,22 @@
 plugins:
-  cpu:
-    ReportByCpu:
-      default: 'true'
-      mandatory: true
-    ReportByState:
-      default: 'true'
-      mandatory: true
-    ReportNumCpu:
-      default: 'true'
-      mandatory: true
-    ValuesPercentage:
-      default: 'True'
-      mandatory: true
-  otherplugin:
-    option1:
-      default: str
-      mandatory: true
-    option2:
-      mandatory: false
+  - name: "cpu"
+    options:
+      ReportByCpu:
+        default: 'true'
+        mandatory: true
+      ReportByState:
+        default: 'true'
+        mandatory: true
+      ReportNumCpu:
+        default: 'true'
+        mandatory: true
+      ValuesPercentage:
+        default: 'True'
+        mandatory: true
+  - name: "otherplugin"
+    options:
+      option1:
+        default: str
+        mandatory: true
+      option2:
+        mandatory: false
