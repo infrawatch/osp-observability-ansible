@@ -1,3 +1,4 @@
+# TODO: change mandatory to "set_default" as this is more intuitive
 plugins:
   - name: "cpu"
     options:
@@ -8,15 +9,64 @@ plugins:
         default: 'true'
         mandatory: true
       ReportNumCpu:
-        default: 'true'
+        default: 'false'
         mandatory: true
       ValuesPercentage:
-        default: 'True'
+        default: 'true'
         mandatory: true
-  - name: "otherplugin"
-    options:
-      option1:
-        default: str
-        mandatory: true
-      option2:
+      ReportGuestState:
+        default: 'true'
         mandatory: false
+      SubtractGuestState:
+        default: 'true'
+        mandatory: false
+  - name: "cpufreq"
+    options: {}
+  - name: "cpusleep"
+    options: {}
+  - name: "csv"
+    options:
+      DataDir:
+        default: "/var/log/collectd/csv/"
+        mandatory: true
+      StoreRates:
+        default: 'false'
+        mandatory: true
+  - name: "df"
+    options:
+       # TODO: Add some defaults here, at least for one of these
+       Device:
+         mandatory: false
+       MountPoint:
+         mandatory:  false
+       FSType:
+         mandatory: false
+       IgnoreSelected:
+         mandatory: true
+         default: 'true'
+       ReportByDevice:
+         mandatory: true
+         default: 'true'
+       ReportInodes:
+         mandatory: true
+         default: 'true'
+       ValuesAbsolute:
+         mandatory: true
+         default: 'true'
+       ValuesPercentage:
+         mandatory: true''
+         default: 'true'
+  - name: "disk"
+    options:
+      Disk:
+        mandatory: false
+        default: []  # TODO: parse this "complex config"
+      IgnoreSelected:
+        mandatory: true
+        default: false
+  - name: "uptime"
+  - name: "uuid"
+    options:
+      Path:
+        mandatory: false
+    set_defaults: false
