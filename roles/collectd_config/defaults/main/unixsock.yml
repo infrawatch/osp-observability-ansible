@@ -1,5 +1,7 @@
 ---
-# defaults for unixsock plugin
-collectd_plugin_unixsock_socketgroup: "root"
-collectd_plugin_unixsock_socketfile: "/var/run/collectd-socket"
-collectd_plugin_unixsock_deletesocket: true
+# Ansible managed
+# Defaults for unixsock plugin
+collectd_plugin_unixsock_socketfile: /var/run/collectd-socket
+collectd_plugin_unixsock_socketgroup: root
+# collectd_plugin_unixsock_socketperms: nil
+collectd_plugin_unixsock_deletesocket: True

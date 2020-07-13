@@ -1,0 +1,8 @@
+# Ansible managed
+LoadPlugin uuid
+
+<Plugin "uuid">
+{% if collectd_plugin_uuid_path is defined %}
+  Path "{{ collectd_plugin_uuid_path }}"
+{% endif %}
+</Plugin>

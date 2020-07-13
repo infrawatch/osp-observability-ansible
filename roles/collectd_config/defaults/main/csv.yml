@@ -1,0 +1,5 @@
+---
+# Ansible managed
+# Defaults for csv plugin
+collectd_plugin_csv_datadir: /var/log/collectd/csv/
+collectd_plugin_csv_storerates: false

@@ -1,10 +1,15 @@
+# Ansible managed
 LoadPlugin cpu
 
-<Plugin cpu>
-  ReportByState {{ collectd_plugin_cpu_reportbystate }}
-  ReportByCpu {{ collectd_plugin_cpu_reportbystate }}
-  ValuesPercentage {{ collectd_plugin_cpu_valuespercentage }}
-  ReportNumCpu {{ collectd_plugin_cpu_reportnumcpu }}
-  ReportGuestState true
-  SubtractGuestState true
+<Plugin "cpu">
+  ReportByCpu "{{ collectd_plugin_cpu_reportbycpu }}"
+  ReportByState "{{ collectd_plugin_cpu_reportbystate }}"
+  ReportNumCpu "{{ collectd_plugin_cpu_reportnumcpu }}"
+  ValuesPercentage "{{ collectd_plugin_cpu_valuespercentage }}"
+{% if collectd_plugin_cpu_reportgueststate is defined %}
+  ReportGuestState "{{ collectd_plugin_cpu_reportgueststate }}"
+{% endif %}
+{% if collectd_plugin_cpu_subtractgueststate is defined %}
+  SubtractGuestState "{{ collectd_plugin_cpu_subtractgueststate }}"
+{% endif %}
 </Plugin>

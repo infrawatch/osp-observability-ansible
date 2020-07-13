@@ -64,6 +64,21 @@ plugins:
       IgnoreSelected:
         mandatory: true
         default: false
+  - name: "unixsock"
+    options:
+      SocketFile:
+        default: "/var/run/collectd-socket"
+        mandatory: true
+      SocketGroup:
+        default: "root"
+        mandatory: false
+        set_default: true
+      SocketPerms:
+        mandatory: false
+      DeleteSocket:
+        mandatory: false
+        default: true
+        set_default: true
   - name: "uptime"
   - name: "uuid"
     options:

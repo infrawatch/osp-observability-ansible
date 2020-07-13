@@ -1,7 +1,11 @@
 ---
-# defaults for configuring the df plugin
+# Ansible managed
+# Defaults for df plugin
+# collectd_plugin_df_device: nil
+# collectd_plugin_df_mountpoint: nil
+# collectd_plugin_df_fstype: nil
+collectd_plugin_df_ignoreselected: true
 collectd_plugin_df_reportbydevice: true
-#TODO: make this do something useful
-collectd_plugin_df_fstypes: ['xfs']
-
-#TODO: Add if def in templates for non-required plugin options
+collectd_plugin_df_reportinodes: true
+collectd_plugin_df_valuesabsolute: true
+# collectd_plugin_df_valuespercentage: true

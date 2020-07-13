@@ -1,5 +1,11 @@
+# Ansible managed
 LoadPlugin disk
 
-<Plugin disk>
-  IgnoreSelected {{ collectd_plugin_disk_ignoreselected }}
+<Plugin "disk">
+{% if collectd_plugin_disk_disk is defined %}
+  {% for disk in collectd_plugin_disk_disk %}
+  Disk "{{ disk }}"
+  {% endfor %}
+{% endif %}
+  IgnoreSelected "{{ collectd_plugin_disk_ignoreselected }}"
 </Plugin>
