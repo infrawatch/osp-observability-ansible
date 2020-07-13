@@ -1,0 +1,24 @@
+---
+- hosts: localhost
+  tasks:
+  - include_vars:
+      file: plugin_options.yaml
+  - debug:
+      var: plugins
+
+  - name: "Create plugin config files"
+    template:
+      src: "plugin.conf.j2.j2"
+      dest: "../roles/collectd_config/templates/{{ plugin.name }}.conf.j2"
+    loop: "{{ plugins }}"
+    loop_control:
+      loop_var: plugin
+
+  - name: "Create plugin defaults files"
+    template:
+      src: "defaults.yml.j2"
+      dest: "../roles/collectd_config/defaults/main/{{ plugin.name }}.yml"
+    when: "{{ plugin.options|default({}) and plugin.set_defaults|default(true) }}"
+    loop: "{{ plugins }}"
+    loop_control:
+      loop_var: plugin
