@@ -85,3 +85,25 @@ plugins:
       Path:
         mandatory: false
     set_defaults: false
+  - name: "virt"
+    options:
+      Connection:
+        default: "qemu:///system"
+        mandatory: true
+      RefreshInterval:
+        default: 10
+        mandatory: false
+        set_default: true
+      HostnameFormat:
+        default: "hostname"
+        mandatory: false
+        set_default: true
+      PluginInstanceFormat:
+        default: "hostname uuid"
+        mandatory: false
+        set_default: true
+      ExtraStats:
+        default: "cpu_util disk disk_err pcpu job_stats_background perf vcpupin"
+        mandatory: False
+        set_default: true
+      # TODO: add other options from collectd docs

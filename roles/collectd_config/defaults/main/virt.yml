@@ -1,7 +1,8 @@
 ---
-# default values for configuring the virt plugin
-collectd_plugin_virt_connection: "qemu:///system"
-collectd_plugin_virt_refresh_interval: 10
-collectd_plugin_virt_hostname_format: "hostname"
-collectd_plugin_virt_plugininstanceformat: "hostname uuid"
-collectd_plugin_virt_extra_stats: "cpu_util disk disk_err pcpu job_stats_background perf vcpupin"
+# Ansible managed
+# Defaults for virt plugin
+collectd_plugin_virt_connection: qemu:///system
+collectd_plugin_virt_refreshinterval: 10
+collectd_plugin_virt_hostnameformat: hostname
+collectd_plugin_virt_plugininstanceformat: hostname uuid
+collectd_plugin_virt_extrastats: cpu_util disk disk_err pcpu job_stats_background perf vcpupin

@@ -10,18 +10,12 @@
       - ceph
       - connectivity
       - cpu
-      - df
-      - disk
-      - connectivity
-      - cpu
+      - cpufreq
+      - cpusleep
       - csv
       - df
+      - disk
       - hugepages
-      - intel_rdt
-      - interface
-      # TODO: reenable this when there are reasonable defaults or the template has been updated
-      # - ipmi
-      - load
       - logfile
       - memory
       - network
