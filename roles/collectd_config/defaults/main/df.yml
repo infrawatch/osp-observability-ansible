@@ -8,4 +8,4 @@ collectd_plugin_df_ignoreselected: true
 collectd_plugin_df_reportbydevice: true
 collectd_plugin_df_reportinodes: true
 collectd_plugin_df_valuesabsolute: true
-# collectd_plugin_df_valuespercentage: true
+collectd_plugin_df_valuespercentage: true

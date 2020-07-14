@@ -5,6 +5,13 @@ This tool is used to create config templates and defaults file for the
 collectd_config role. Currently works only for simple configs (i.e. only
 string in the config params)
 
+This tool is intended for developers to use when adding a new plugin template
+for the collectd_config ansible role. The user should add info about the plugin
+and its parameters, and use this to generate the template, instead of creating
+them by hand. The changes to plugin_options.yaml, along with the generated
+templates in ``roles/collectd_config/templates/<plugin>.conf.yml`` should be
+committed.
+
 The script reads a yaml file which has options for each plugin, whether
 the options are mandatory and what the default value is.
 e.g.

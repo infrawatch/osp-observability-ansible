@@ -54,7 +54,7 @@ plugins:
          mandatory: true
          default: 'true'
        ValuesPercentage:
-         mandatory: true''
+         mandatory: 'true'
          default: 'true'
   - name: "disk"
     options:
@@ -64,6 +64,22 @@ plugins:
       IgnoreSelected:
         mandatory: true
         default: false
+  - name: "load"
+    options:
+      ReportRelative:
+        mandatory: false
+        default: true
+        set_default: true
+  - name: "memory"
+    options:
+      ValuesAbsolute:
+        mandatory: false
+        default: true
+        set_default: true
+      ValuesPercentage:
+        mandatory: false
+        default: true
+        set_default: true
   - name: "unixsock"
     options:
       SocketFile:
@@ -82,7 +98,7 @@ plugins:
   - name: "uptime"
   - name: "uuid"
     options:
-      Path:
+      UUIDFile:
         mandatory: false
     set_defaults: false
   - name: "virt"
@@ -99,7 +115,7 @@ plugins:
         mandatory: false
         set_default: true
       PluginInstanceFormat:
-        default: "hostname uuid"
+        default: "name"
         mandatory: false
         set_default: true
       ExtraStats:

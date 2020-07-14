@@ -1,6 +1,11 @@
+# Ansible managed
 LoadPlugin memory
 
-<Plugin memory>
-  ValuesAbsolute true
-  ValuesPercentage true
+<Plugin "memory">
+{% if collectd_plugin_memory_valuesabsolute is defined %}
+  ValuesAbsolute {{ collectd_plugin_memory_valuesabsolute| string | lower }}
+{% endif %}
+{% if collectd_plugin_memory_valuespercentage is defined %}
+  ValuesPercentage {{ collectd_plugin_memory_valuespercentage| string | lower }}
+{% endif %}
 </Plugin>

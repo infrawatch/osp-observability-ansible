@@ -4,7 +4,7 @@ LoadPlugin virt
 <Plugin "virt">
   Connection "{{ collectd_plugin_virt_connection }}"
 {% if collectd_plugin_virt_refreshinterval is defined %}
-  RefreshInterval "{{ collectd_plugin_virt_refreshinterval }}"
+  RefreshInterval {{ collectd_plugin_virt_refreshinterval| string | lower }}
 {% endif %}
 {% if collectd_plugin_virt_hostnameformat is defined %}
   HostnameFormat "{{ collectd_plugin_virt_hostnameformat }}"

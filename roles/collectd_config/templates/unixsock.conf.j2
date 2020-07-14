@@ -10,6 +10,6 @@ LoadPlugin unixsock
   SocketPerms "{{ collectd_plugin_unixsock_socketperms }}"
 {% endif %}
 {% if collectd_plugin_unixsock_deletesocket is defined %}
-  DeleteSocket "{{ collectd_plugin_unixsock_deletesocket }}"
+  DeleteSocket {{ collectd_plugin_unixsock_deletesocket| string | lower }}
 {% endif %}
 </Plugin>
