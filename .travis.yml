@@ -16,4 +16,6 @@ script:
   - ansible-playbook tools/template_generator.yml
   - ansible-playbook -i default.inv main.yml --extra-vars "collectd_conf_output_dir=$HOME/collectd.conf.d" --tags="test" && cat $HOME/collectd.conf.d/*
   # - collectd -t -C $HOME/collectd.conf
-  - sudo docker run -ti --net=host -v $HOME/collectd.conf.d:/opt/collectd/etc/collectd.conf.d -v /var/run:/var/run -v /tmp:/tmp --privileged opnfv/barometer-collectd 
+  - sudo docker run -dti --name collectd-test --net=host -v $HOME/collectd.conf.d:/opt/collectd/etc/collectd.conf.d -v /var/run:/var/run -v /tmp:/tmp --privileged opnfv/barometer-collectd
+  - sudo docker logs collectd-test
+  - sudo podman exec collectd-test /opt/collectd/bin/collectdctl -s /var/run/collectd-socket listval
