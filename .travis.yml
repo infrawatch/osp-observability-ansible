@@ -5,11 +5,15 @@ git:
 addons:
   apt:
     update: true
+services:
+  - docker
 before_install:
-  - sudo apt-get -y install collectd
+  - sudo docker pull opnfv/barometer
 install:
   - pip install ansible-lint ansible
 script:
   - ansible-lint
+  - ansible-playbook tools/template_generator.yml
   - ansible-playbook -i default.inv main.yml --extra-vars "collectd_conf_output_dir=$HOME/collectd.conf.d" --tags="test" && cat $HOME/collectd.conf.d/*
-  - collectd -t -C $HOME/collectd.conf
+  # - collectd -t -C $HOME/collectd.conf
+  - sudo docker run -ti --net=host -v $HOME/collectd.conf.d:/opt/collectd/etc/collectd.conf.d -v /var/run:/var/run -v /tmp:/tmp --privileged opnfv/barometer-collectd 
