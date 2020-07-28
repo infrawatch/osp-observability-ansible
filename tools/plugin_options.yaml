@@ -1,5 +1,16 @@
 # TODO: change mandatory to "set_default" as this is more intuitive
 plugins:
+  - name: "connectivity"
+    set_defaults: false
+    options:
+      Interfaces:
+        default: []
+        mandatory: false
+        set_default: false
+      IgnoreSelected:
+        default: true
+        mandatory: false
+        set_default: false
   - name: "cpu"
     options:
       ReportByCpu:
@@ -59,17 +70,85 @@ plugins:
   - name: "disk"
     options:
       Disk:
-        mandatory: false
+        mandatory: true
         default: []  # TODO: parse this "complex config"
       IgnoreSelected:
         mandatory: true
         default: false
+<<<<<<< HEAD
+  - name: "hugepages"
+    set_defaults: false
+    options:
+      ReportPerNodeHP:
+        mandatory: false
+        default: true
+      ReportRootHP:
+        mandatory: false
+        default: true
+      ValuesPages:
+        mandatory: false
+        default: true
+      ValuesBytes:
+        mandatory: false
+        default: false
+      ValuesPercentage:
+        mandatory: false
+        default: false
+=======
+      UdevNameAttr:
+        mandatory: false
+        default: "DM_NAME"
+  - name: "dns"
+    options:
+      Interface:
+        mandatory: false
+      IgnoreSource:
+        mandatory: false
+      SelectNumericQueryTypes:
+        mandatory: false
+    set_defaults: false
+  - name: "hddtemp"
+    options:
+      Host:
+        mandatory: false
+      Port:
+        mandatory: false
+    set_defaults: false
   - name: "load"
     options:
       ReportRelative:
         mandatory: false
         default: true
         set_default: true
+  - name: "logfile"
+    options:
+      Loglevel:
+        default: "info"
+        mandatory: true
+      File:
+        mandatory: true
+        default: "/var/log/collectd.log"
+      Timestamp:
+        mandatory: true
+        default: true
+      PrintSeverity:
+        mandatory: false
+        default: false
+  - name: "ntpd"
+    options:
+      Host:
+        mandatory: false
+        default: localhost
+      Port:
+        mandatory: false
+        default: 123
+      ReverseLookups:
+        mandatory: false
+        default: true
+      IncludeUnitID:
+        mandatory: false
+        default: false
+    set_defaults: false
   - name: "memory"
     options:
       ValuesAbsolute:
@@ -80,6 +159,73 @@ plugins:
         mandatory: false
         default: true
         set_default: true
+  - name: "procevent"
+    options:
+      BufferLength:
+        mandatory: false
+        default: 10
+        set_default: true
+      Process:
+        mandatory: False
+      ProcessRegex:
+        mandatory: false
+  - name: "smart"
+    options:
+      Disk:
+        default: []
+        mandatory: true
+      IgnoreSelected:
+        default: false
+        mandatory: false
+      IgnoreSleepMode:
+        default: false
+        mandatory: false
+      UseSerial:
+        mandatory: false
+  - name: "swap"
+    options:
+      ReportByDevice:
+        mandatory: false
+        default: false
+      ReportBytes:
+        mandatory: false
+      ValuesAbsolute:
+        mandatory: false
+        default: true
+      ValuesPercentage:
+        mandatory: false
+        default: false
+      ReportIO:
+        mandatory: false
+        default: false
+    set_defaults: false
+  - name: "syslog"
+    options:
+      LogLevel:
+        mandatory: false
+        set_default: true
+        default: info
+      NotifyLevel:
+        mandatory: false
+        set_default: true
+        default: WARNING
+  - name: "turbostat"
+    options:
+      CoreCstates:
+        mandatory: false
+      PackageCstates:
+        mandatory: false
+      SystemManagementInterrupt:
+        mandatory: false
+      DigitalTemperatureSensor:
+        mandatory: false
+      TCCActivationTemp:
+        mandatory: false
+      RunningAveragePowerLimit:
+        mandatory: false
+      LogicalCoreNames:
+        mandatory: false
+    set_defaults: false
   - name: "unixsock"
     options:
       SocketFile:
@@ -122,4 +268,18 @@ plugins:
         default: "cpu_util disk disk_err pcpu job_stats_background perf vcpupin"
         mandatory: False
         set_default: true
+  - name: "vmem"
+    options:
+      Verbose:
+        mandatory: true
+        default: false
+  - name: "write_prometheus"
+    options:
+      Port:
+        mandatory: false
+        default: 9103
+      StalenessDelta:
+        mandatory: false
+        default: 300
+    set_defaults: false
       # TODO: add other options from collectd docs
