@@ -18,4 +18,4 @@ script:
   # - collectd -t -C $HOME/collectd.conf
   - sudo docker run -dti --name collectd-test --net=host -v $HOME/collectd.conf.d:/opt/collectd/etc/collectd.conf.d -v /var/run:/var/run -v /tmp:/tmp --privileged opnfv/barometer-collectd
   - sudo docker logs collectd-test
-  - sudo podman exec collectd-test /opt/collectd/bin/collectdctl -s /var/run/collectd-socket listval
+  - sudo docker exec collectd-test /opt/collectd/bin/collectdctl -s /var/run/collectd-socket listval
