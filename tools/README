@@ -1,4 +1,4 @@
-Template generater
+Template generator
 ==================
 
 This tool is used to create config templates and defaults file for the
@@ -9,7 +9,7 @@ This tool is intended for developers to use when adding a new plugin template
 for the collectd_config ansible role. The user should add info about the plugin
 and its parameters, and use this to generate the template, instead of creating
 them by hand. The changes to plugin_options.yaml, along with the generated
-templates in ``roles/collectd_config/templates/<plugin>.conf.yml`` should be
+templates in ``roles/collectd_config/templates/<plugin>.conf.j2`` should be
 committed.
 
 The script reads a yaml file which has options for each plugin, whether
@@ -38,7 +38,7 @@ fail. Avoid this by using the ``set_defaults: false`` option for the plugin.
 
 Usage::
 
-  python template_generator.py
+  ansible-playbook tools/template_generator.yml
 
 Limitations
 -----------

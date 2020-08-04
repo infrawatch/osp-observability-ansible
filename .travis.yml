@@ -8,7 +8,7 @@ addons:
 services:
   - docker
 before_install:
-  - sudo docker pull opnfv/barometer
+  - sudo docker pull docker.io/tripleomaster/centos-binary-collectd:current-tripleo-rdo
 install:
   - pip install ansible-lint ansible
 script:
@@ -16,6 +16,6 @@ script:
   - ansible-playbook tools/template_generator.yml
   - ansible-playbook -i default.inv main.yml --extra-vars "collectd_conf_output_dir=$HOME/collectd.conf.d" --tags="test" && cat $HOME/collectd.conf.d/*
   # - collectd -t -C $HOME/collectd.conf
-  - sudo docker run -dti --name collectd-test --net=host -v $HOME/collectd.conf.d:/opt/collectd/etc/collectd.conf.d -v /var/run:/var/run -v /tmp:/tmp --privileged opnfv/barometer-collectd
+  - sudo docker run -dti --name collectd-test --net=host -v $HOME/collectd.conf.d:/opt/collectd/etc/collectd.conf.d -v /var/run:/var/run -v /tmp:/tmp -v `pwd`/tests/kolla_config_files/:/var/lib/kolla/config_files/ -e KOLLA_CONFIG_STRATEGY=COPY_ALWAYS --privileged tripleomaster/centos-binary-collectd:current-tripleo-rdo
   - sudo docker logs collectd-test
-  - sudo docker exec collectd-test /opt/collectd/bin/collectdctl -s /var/run/collectd-socket listval
+  - sudo docker exec collectd-test collectdctl -s /var/run/collectd-socket listval
