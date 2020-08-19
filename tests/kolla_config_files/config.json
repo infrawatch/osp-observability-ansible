@@ -1,0 +1,10 @@
+{
+    "command": "/usr/sbin/collectd -f -C /opt/collectd/etc/collectd.conf.d",
+    "permissions": [
+        {
+             "owner": "collectd:collectd",
+             "path": "/var/log/collectd",
+             "recurse": true
+        }
+    ]
+}

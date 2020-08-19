@@ -1,0 +1,29 @@
+# {{ ansible_managed }}
+LoadPlugin {{ plugin.name }}
+
+<Plugin "{{ plugin.name }}">
+{% for option_name, option_value in (plugin.options|default({})).items() %}
+{# Add guarding for non-mandatory variables #}
+{% if not option_value.mandatory|bool -%}
+  {{ '{%' }} if collectd_plugin_{{ plugin.name }}_{{ option_name.lower().replace(" ", "") }} is defined {{ '%}' }}
+{% endif %}
+{# If the option is boolean or a number, then the double quotes around the value are not required #}
+{% if option_value.default|default('') is number or option_value.default|default('') is boolean %}
+  {{ option_name }} {{ '{{' }} collectd_plugin_{{ plugin.name }}_{{ option_name.lower().replace(" ", "") }}| string | lower {{ '}}' }}
+{% elif option_value.default|default('') is iterable and option_value.default|default('') is not string -%}
+  {# This needs to add a for loop to the outputted template #}
+  {{ '{%' }} for {{ option_name.lower() }} in collectd_plugin_{{ plugin.name }}_{{ option_name.lower().replace(" ", "") }} {{ '%}' }}
+  {{ option_name }} {{ '"{{' }} {{ option_name.lower() }} {{ '}}"' }}
+  {{ '{% endfor %}' }}
+{% elif option_value.default|default('') is string %}
+  {{ option_name }} {{ '"{{' }} collectd_plugin_{{ plugin.name }}_{{ option_name.lower().replace(" ", "") }} {{ '}}"' }}
+{% elif option_value.default is mapping %} {# Use ceph for reference. #}
+   # The value ({{ option_value.default }}) for {{ option_name }} is a mapping! Need to do something fancy here.
+{% else %}
+   # The option ({{option_value.default}}) {{ option_name }} is not a string, iterable or mapping!
+{% endif %}
+{% if not option_value.mandatory|bool -%}
+  {{ '{% endif %}' }}
+{% endif %}{# end guarding for non-mandatory variables #}
+{% endfor %}{# end iteration through options #}
+</Plugin>

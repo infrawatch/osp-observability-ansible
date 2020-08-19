@@ -1,0 +1,6 @@
+---
+# {{ ansible_managed }}
+# Defaults for {{ plugin.name }} plugin
+{% for option, value in (plugin.options|default({})).items() -%}
+{% if not (value.set_default|default(false)) and not (value.mandatory|bool)|default(false) -%}# {% endif -%}collectd_plugin_{{ plugin.name }}_{{ option.lower() }}: {{ value.default|default('nil') }}
+{% endfor %}

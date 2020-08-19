@@ -1,20 +1,125 @@
+# TODO: change mandatory to "set_default" as this is more intuitive
 plugins:
-  cpu:
-    ReportByCpu:
-      default: 'true'
-      mandatory: true
-    ReportByState:
-      default: 'true'
-      mandatory: true
-    ReportNumCpu:
-      default: 'true'
-      mandatory: true
-    ValuesPercentage:
-      default: 'True'
-      mandatory: true
-  otherplugin:
-    option1:
-      default: str
-      mandatory: true
-    option2:
-      mandatory: false
+  - name: "cpu"
+    options:
+      ReportByCpu:
+        default: 'true'
+        mandatory: true
+      ReportByState:
+        default: 'true'
+        mandatory: true
+      ReportNumCpu:
+        default: 'false'
+        mandatory: true
+      ValuesPercentage:
+        default: 'true'
+        mandatory: true
+      ReportGuestState:
+        default: 'true'
+        mandatory: false
+      SubtractGuestState:
+        default: 'true'
+        mandatory: false
+  - name: "cpufreq"
+    options: {}
+  - name: "cpusleep"
+    options: {}
+  - name: "csv"
+    options:
+      DataDir:
+        default: "/var/log/collectd/csv/"
+        mandatory: true
+      StoreRates:
+        default: 'false'
+        mandatory: true
+  - name: "df"
+    options:
+       # TODO: Add some defaults here, at least for one of these
+       Device:
+         mandatory: false
+       MountPoint:
+         mandatory:  false
+       FSType:
+         mandatory: false
+       IgnoreSelected:
+         mandatory: true
+         default: 'true'
+       ReportByDevice:
+         mandatory: true
+         default: 'true'
+       ReportInodes:
+         mandatory: true
+         default: 'true'
+       ValuesAbsolute:
+         mandatory: true
+         default: 'true'
+       ValuesPercentage:
+         mandatory: 'true'
+         default: 'true'
+  - name: "disk"
+    options:
+      Disk:
+        mandatory: false
+        default: []  # TODO: parse this "complex config"
+      IgnoreSelected:
+        mandatory: true
+        default: false
+  - name: "load"
+    options:
+      ReportRelative:
+        mandatory: false
+        default: true
+        set_default: true
+  - name: "memory"
+    options:
+      ValuesAbsolute:
+        mandatory: false
+        default: true
+        set_default: true
+      ValuesPercentage:
+        mandatory: false
+        default: true
+        set_default: true
+  - name: "unixsock"
+    options:
+      SocketFile:
+        default: "/var/run/collectd-socket"
+        mandatory: true
+      SocketGroup:
+        default: "root"
+        mandatory: false
+        set_default: true
+      SocketPerms:
+        mandatory: false
+      DeleteSocket:
+        mandatory: false
+        default: true
+        set_default: true
+  - name: "uptime"
+  - name: "uuid"
+    options:
+      UUIDFile:
+        mandatory: false
+    set_defaults: false
+  - name: "virt"
+    options:
+      Connection:
+        default: "qemu:///system"
+        mandatory: true
+      RefreshInterval:
+        default: 10
+        mandatory: false
+        set_default: true
+      HostnameFormat:
+        default: "hostname"
+        mandatory: false
+        set_default: true
+      PluginInstanceFormat:
+        default: "name"
+        mandatory: false
+        set_default: true
+      ExtraStats:
+        default: "cpu_util disk disk_err pcpu job_stats_background perf vcpupin"
+        mandatory: False
+        set_default: true
+      # TODO: add other options from collectd docs
