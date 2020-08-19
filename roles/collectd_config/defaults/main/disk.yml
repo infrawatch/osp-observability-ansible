@@ -1,5 +1,0 @@
----
-# Ansible managed
-# Defaults for disk plugin
-# collectd_plugin_disk_disk: []
-collectd_plugin_disk_ignoreselected: False

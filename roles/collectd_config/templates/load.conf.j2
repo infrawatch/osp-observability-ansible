@@ -1,8 +1,0 @@
-# Ansible managed
-LoadPlugin load
-
-<Plugin "load">
-{% if collectd_plugin_load_reportrelative is defined %}
-  ReportRelative {{ collectd_plugin_load_reportrelative| string | lower }}
-{% endif %}
-</Plugin>

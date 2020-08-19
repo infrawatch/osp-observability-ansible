@@ -11,6 +11,8 @@ before_install:
   - sudo docker pull docker.io/tripleomaster/centos-binary-collectd:current-tripleo-rdo
 install:
   - pip install ansible-lint ansible
+before_script:
+  - ansible-galaxy install -r requirements.yml --roles-path ./roles/
 script:
   - ansible-lint
   - ansible-playbook tools/template_generator.yml
