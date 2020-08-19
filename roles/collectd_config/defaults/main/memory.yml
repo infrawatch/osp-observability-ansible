@@ -1,5 +1,0 @@
----
-# Ansible managed
-# Defaults for memory plugin
-collectd_plugin_memory_valuesabsolute: True
-collectd_plugin_memory_valuespercentage: True
