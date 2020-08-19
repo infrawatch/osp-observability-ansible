@@ -1,0 +1,5 @@
+roles:
+  - src: https://github.com/infrawatch/collectd-config-ansible-role
+    name: collectd_config
+  - src: https://github.com/infrawatch/tripleo-collectd-ansible-role
+    name: tripleo_collectd
