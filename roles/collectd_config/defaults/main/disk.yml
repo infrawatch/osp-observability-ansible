@@ -1,3 +1,0 @@
----
-# defaults for disk plugin
-collectd_plugin_disk_ignoreselected: false
