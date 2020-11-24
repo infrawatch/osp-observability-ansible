@@ -75,26 +75,6 @@ plugins:
       IgnoreSelected:
         mandatory: true
         default: false
-<<<<<<< HEAD
-  - name: "hugepages"
-    set_defaults: false
-    options:
-      ReportPerNodeHP:
-        mandatory: false
-        default: true
-      ReportRootHP:
-        mandatory: false
-        default: true
-      ValuesPages:
-        mandatory: false
-        default: true
-      ValuesBytes:
-        mandatory: false
-        default: false
-      ValuesPercentage:
-        mandatory: false
-        default: false
-=======
       UdevNameAttr:
         mandatory: false
         default: "DM_NAME"
@@ -114,6 +94,24 @@ plugins:
       Port:
         mandatory: false
     set_defaults: false
+  - name: "hugepages"
+    set_defaults: false
+    options:
+      ReportPerNodeHP:
+        mandatory: false
+        default: true
+      ReportRootHP:
+        mandatory: false
+        default: true
+      ValuesPages:
+        mandatory: false
+        default: true
+      ValuesBytes:
+        mandatory: false
+        default: false
+      ValuesPercentage:
+        mandatory: false
+        default: false
   - name: "load"
     options:
       ReportRelative:
@@ -134,6 +132,16 @@ plugins:
       PrintSeverity:
         mandatory: false
         default: false
+ - name: "memory"
+    options:
+      ValuesAbsolute:
+        mandatory: false
+        default: true
+        set_default: true
+      ValuesPercentage:
+        mandatory: false
+        default: true
+        set_default: true
   - name: "ntpd"
     options:
       Host:
@@ -149,16 +157,6 @@ plugins:
         mandatory: false
         default: false
     set_defaults: false
-  - name: "memory"
-    options:
-      ValuesAbsolute:
-        mandatory: false
-        default: true
-        set_default: true
-      ValuesPercentage:
-        mandatory: false
-        default: true
-        set_default: true
   - name: "procevent"
     options:
       BufferLength:
@@ -219,7 +217,7 @@ plugins:
         mandatory: false
       DigitalTemperatureSensor:
         mandatory: false
-      TCCActivationTemp:
+              TCCActivationTemp:
         mandatory: false
       RunningAveragePowerLimit:
         mandatory: false

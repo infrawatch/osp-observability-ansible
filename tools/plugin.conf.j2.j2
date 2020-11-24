@@ -1,5 +1,11 @@
-# This file was created using the template generator at https://github.com/infrawatch/osp-observability-ansible/tree/plugin_templates_generate/tools/
+{{ '{# '}}# This file was created using the template generator at https://github.com/infrawatch/osp-observability-ansible/tree/plugin_templates_generate/tools/ {{ '#}' }}
+{{ '{%' }} if collectd_plugin_{{ plugin.name }}_interval is not defined {{ '%}' }}
 LoadPlugin {{ plugin.name }}
+{{ '{% else %}' }}
+<LoadPlugin {{ plugin.name }}>
+   Interval {{ '{{' }} collectd_plugin_{{ plugin.name }}_interval {{ '}}' }}
+</LoadPlugin>
+{{ '{% endif %}' }}
 
 <Plugin "{{ plugin.name }}">
 {% for option_name, option_value in (plugin.options|default({})).items() %}
@@ -8,7 +14,7 @@ LoadPlugin {{ plugin.name }}
   {{ '{%' }} if collectd_plugin_{{ plugin.name }}_{{ option_name.lower().replace(" ", "") }} is defined {{ '%}' }}
 {% endif %}
 {# If the option is boolean or a number, then the double quotes around the value are not required #}
-{% if option_value.default|default('') is number or option_value.default|default('') is boolean %}
+{% if option_value.default|default('') is number or option_value.default|default('') | bool %}
   {{ option_name }} {{ '{{' }} collectd_plugin_{{ plugin.name }}_{{ option_name.lower().replace(" ", "") }} | string | lower {{ '}}' }}
 {% elif option_value.default|default('') is iterable and option_value.default|default('') is not string -%}
   {# This needs to add a for loop to the outputted template #}
