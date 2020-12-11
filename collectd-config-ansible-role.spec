@@ -1,11 +1,15 @@
 %global srcname collectd_config_ansible_role
 %global rolename collectd-config
 
+%{!?version: %global version 0.1}
+%{!?release: %global release 1}
+
 %{!?upstream_version: %global upstream_version %{version}%{?milestone}}
+#%{?_version: %global version %{_version}}
 
 Name:           ansible-%{rolename}
-Version:        master
-Release:        1
+Version:        %{version}
+Release:        %{release}
 Summary:        Ansible role for creating collectd configs
 
 Group:          TODO

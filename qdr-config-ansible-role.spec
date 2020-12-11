@@ -4,7 +4,7 @@
 %{!?upstream_version: %global upstream_version %{version}%{?milestone}}
 
 Name:           ansible-%{rolename}
-Version:        master
+Version:        0.1
 Release:        1
 Summary:        Ansible role for creating qdr configs
 

@@ -1,0 +1,11 @@
+on: push
+
+jobs:
+  rpm_build_job:
+    runs-on: ubuntu-18.04
+    name: Build the rpms in infrawatch
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the RPMs
+        uses: ./.github/actions/

@@ -1,0 +1,12 @@
+# action.yml
+#
+name: 'RPM build'
+description: "Check that the spec files build as expected"
+
+outputs:
+  status:
+    description: 'Success or failure'
+
+runs:
+  using: 'Docker'
+  image: 'Dockerfile'
