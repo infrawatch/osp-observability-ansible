@@ -1,0 +1,71 @@
+---
+
+- name: Deploy Prometheus agent
+  hosts: "{{ prometheus_destination | default('controller-0') }}"
+  vars:
+    wdir: "{{ base_work_directory | default('/var/lib/osp-observability') }}"
+    container_name: "{{ prometheus_container_name | default('prometheus_agent') }}"
+    container_image: "{{ prometheus_image | default('quay.io/prometheus/prometheus:latest') }}"
+    remote_write: "{{ prometheus_remote_write }}"
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Prepare configuration directory for Prometheus agent
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: nobody
+        group: nobody
+        mode: '0750'
+      with_items:
+        - "{{ wdir }}/{{ container_name }}"
+        - "{{ wdir }}/{{ container_name }}/config"
+    - name: "[DEMO] Prepare directory structure for volume mounts"
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: nobody
+        group: nobody
+        mode: '0750'
+      with_items:
+        - "{{ wdir }}/{{ container_name }}/config/data/"
+        - "{{ wdir }}/{{ container_name }}/config/etc/"
+        - "{{ wdir }}/{{ container_name }}/config/etc/prometheus"
+    - name: "[DEMO] Provide Prometheus configuration"
+      copy:
+        owner: root
+        group: root
+        mode: '0750'
+        dest: "{{ wdir }}/{{ container_name }}/config/etc/prometheus/prometheus.yml"
+        content: |
+          global:
+            scrape_interval: 5s
+            external_labels:
+              cluster: demo
+              replica: 0
+
+          scrape_configs:
+            - job_name: 'prometheus-agent'
+              static_configs:
+                - targets: ['127.0.0.1:9090']
+
+          remote_write:
+            - url: '{{ remote_write[0] }}'
+    - name: Spawn containerized Prometheus agent
+      include_role:
+        name: /usr/share/ansible/roles/spawn_container
+        tasks_from: main
+      vars:
+        user: root
+        workdir: "{{ wdir }}"
+        confdir: "{{ wdir }}/{{ container_name }}"
+        name: "{{ container_name }}"
+        image: "{{ container_image }}"
+        volumes:
+          - "{{ wdir }}/{{ container_name }}/config/data:/data:rw,z"
+          - "{{ wdir }}/{{ container_name }}/config/etc/prometheus:/etc/prometheus:ro,z"
+        command: >
+          --enable-feature=agent
+          --config.file=/etc/prometheus/prometheus.yml
+          --storage.agent.path=/data
+          --web.listen-address=:9666

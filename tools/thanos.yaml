@@ -2,6 +2,8 @@
 
 - name: Deploy minimal Thanos stack for testing purposes
   hosts: Undercloud
+  become: true
+  become_method: sudo
   tasks:
     - name: Prepare temporary directories
       file:
