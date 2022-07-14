@@ -4,7 +4,7 @@
   include_tasks: volume_check.yml
   with_items:
     - "{{ volumes }}"
-  when: volumes is defined and (volumes|length>0)
+  when: volumes|length>0
 
 - name: Prepare container log directory
   file:
@@ -17,7 +17,7 @@
     - /var/log/containers
     - "/var/log/containers/{{ name }}"
 
-- name: Container clenup
+- name: Container cleanup
   containers.podman.podman_container:
     name: "{{ name }}"
     state: absent
@@ -37,7 +37,7 @@
       path: /etc/systemd/system/
       restart_policy: always
   register: result_with_volumes
-  when: volumes is defined and (volumes|length>0)
+  when: volumes|length>0
 
 - name: Start the container without defined volume mounts
   containers.podman.podman_container:
@@ -53,7 +53,7 @@
       path: /etc/systemd/system/
       restart_policy: always
   register: result_no_volumes
-  when: volumes is not defined or (volumes is defined and (volumes|length<0))
+  when: volumes|length==0
 
 - name: Get result
   set_fact:
