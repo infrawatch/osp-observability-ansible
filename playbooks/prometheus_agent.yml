@@ -1,7 +1,7 @@
 ---
 
 - name: Deploy Prometheus agent
-  hosts: "{{ prometheus_destination | default('allovercloud') }}"
+  hosts: "{{ prometheus_destination | default('controller-0') }}"
   vars:
     wdir: "{{ base_work_directory | default('/var/lib/osp-observability') }}"
     container_name: "{{ prometheus_container_name | default('prometheus_agent') }}"
