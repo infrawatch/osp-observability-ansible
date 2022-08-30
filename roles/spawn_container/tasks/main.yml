@@ -27,7 +27,7 @@
     name: "{{ name }}"
     image: "{{ image }}"
     user: "{{ user }}"
-    state: started
+    state: present
     restart_policy: "always"
     network: host
     command: "{{ command }}"
@@ -44,7 +44,7 @@
     name: "{{ name }}"
     image: "{{ image }}"
     user: "{{ user }}"
-    state: started
+    state: present
     restart_policy: "always"
     network: host
     command: "{{ command }}"
@@ -76,8 +76,14 @@
     patterns: "osp-observability-{{ name }}*"
   register: files
 
-- name: Create systemd file in case it was not created
+- name: Create systemd file in case it was not created by podman
   template:
     src: systemd.service.j2
     dest: "/etc/systemd/system/osp-observability-{{ name }}.service"
   when: files.matched == 0
+
+- name: Start container via systemd
+  ansible.builtin.systemd:
+    name: "osp-observability-{{ name }}.service"
+    enabled: yes
+    state: started
