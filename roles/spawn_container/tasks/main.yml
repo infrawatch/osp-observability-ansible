@@ -8,14 +8,11 @@
 
 - name: Prepare container log directory
   file:
-    path: "{{ item }}"
+    path: "/var/log/containers/{{ name }}"
     state: directory
     owner: root
     group: root
     mode: '0750'
-  with_items:
-    - /var/log/containers
-    - "/var/log/containers/{{ name }}"
 
 - name: Container cleanup
   containers.podman.podman_container:

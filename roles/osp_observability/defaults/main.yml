@@ -1,0 +1,7 @@
+---
+
+libdir: /usr/share/osp-observability
+workdir: /var/lib/osp-observability
+
+openstack_cloud_name: overcloud
+prometheus_scrape_interval: "1s"

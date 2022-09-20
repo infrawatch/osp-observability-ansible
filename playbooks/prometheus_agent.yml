@@ -10,48 +10,13 @@
   become: true
   become_method: sudo
   tasks:
-    - name: Prepare configuration directory for Prometheus agent
-      file:
-        path: "{{ item }}"
-        state: directory
-        owner: nobody
-        group: nobody
-        mode: '0750'
-      with_items:
-        - "{{ wdir }}/{{ container_name }}"
-        - "{{ wdir }}/{{ container_name }}/config"
-    - name: "[DEMO] Prepare directory structure for volume mounts"
-      file:
-        path: "{{ item }}"
-        state: directory
-        owner: nobody
-        group: nobody
-        mode: '0750'
-      with_items:
-        - "{{ wdir }}/{{ container_name }}/config/data/"
-        - "{{ wdir }}/{{ container_name }}/config/etc/"
-        - "{{ wdir }}/{{ container_name }}/config/etc/prometheus"
-    - name: "[DEMO] Provide Prometheus configuration"
-      copy:
-        owner: root
-        group: root
-        mode: '0750'
-        dest: "{{ wdir }}/{{ container_name }}/config/etc/prometheus/prometheus.yml"
-        content: |
-          global:
-            scrape_interval: 5s
-            external_labels:
-              cluster: demo
-              replica: 0
-
-          scrape_configs:
-            - job_name: 'prometheus-agent'
-              static_configs:
-                - targets: ['127.0.0.1:9090']
-
-          remote_write:
-            - url: '{{ remote_write[0] }}'
-    - name: Spawn containerized Prometheus agent
+    - name: Provide Prometheus agent configuration
+      include_role:
+        name: /usr/share/ansible/roles/osp_observability
+        tasks_from: configure_prometheus
+      vars:
+        prometheus_config_basedir: {{ wdir }}/{{ container_name }}/config
+    - name: Spawn containerized Prometheus agent with provided configuration
       include_role:
         name: /usr/share/ansible/roles/spawn_container
         tasks_from: main
@@ -62,8 +27,8 @@
         name: "{{ container_name }}"
         image: "{{ container_image }}"
         volumes:
-          - "{{ wdir }}/{{ container_name }}/config/data:/data:rw,z"
-          - "{{ wdir }}/{{ container_name }}/config/etc/prometheus:/etc/prometheus:ro,z"
+          - "{{ prometheus_config_dir }}:/data:rw,z"
+          - "{{ prometheus_data_basedir }}:/etc/prometheus:ro,z"
         command: >
           --enable-feature=agent
           --config.file=/etc/prometheus/prometheus.yml

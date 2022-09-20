@@ -1,0 +1,25 @@
+---
+
+- name: Expose created Prometheus agent directories
+  ansible.builtin.set_fact:
+    prometheus_config_dir: "{{ prometheus_config_basedir }}/data"
+    prometheus_data_dir: "{{ prometheus_config_basedir }}/etc/prometheus"
+
+- name: Prepare configuration and data directory for Prometheus agent
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: nobody
+    group: nobody
+    mode: '0750'
+  with_items:
+    - "{{ prometheus_config_dir }}"
+    - "{{ prometheus_data_dir }}"
+
+- name: Provide Prometheus agent configuration
+  ansible.builtin.template:
+    owner: root
+    group: root
+    mode: '0644'
+    dest: "{{ prometheus_config_dir }}/prometheus.yml"
+    src: osp_observability/prometheus.yml.j2
