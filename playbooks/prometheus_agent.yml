@@ -6,8 +6,7 @@
     wdir: "{{ base_work_directory | default('/var/lib/osp-observability') }}"
     container_name: "{{ prometheus_container_name | default('prometheus_agent') }}"
     container_image: "{{ prometheus_image | default('quay.io/prometheus/prometheus:latest') }}"
-    remote_write: "{{ prometheus_remote_write }}"
-                        
+    remote_write: "{{ prometheus_remote_write }}"                        
   become: true
   become_method: sudo
   tasks:
@@ -15,9 +14,9 @@
       ansible.builtin.include_vars:
         file: /var/lib/osp-observability/scrape
         name: scrape_endpoints
-
     - debug: msg="the value of scrape_endpoints is {{ scrape_endpoints }}"
-    - name: Spawn containerized Prometheus agent with provided configuration
+
+    - name: Provide Prometheus agent configuration
       include_role:
         name: /usr/share/ansible/roles/osp_observability
         tasks_from: configure_prometheus
