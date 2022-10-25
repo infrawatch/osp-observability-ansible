@@ -22,4 +22,4 @@
     group: root
     mode: '0644'
     dest: "{{ prometheus_config_dir }}/prometheus.yml"
-    src: osp_observability/prometheus.yml.j2
+    src: prometheus.yml.j2

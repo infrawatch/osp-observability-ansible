@@ -7,15 +7,22 @@
     container_name: "{{ prometheus_container_name | default('prometheus_agent') }}"
     container_image: "{{ prometheus_image | default('quay.io/prometheus/prometheus:latest') }}"
     remote_write: "{{ prometheus_remote_write }}"
+                        
   become: true
   become_method: sudo
   tasks:
-    - name: Provide Prometheus agent configuration
+    - name: Include scrape endpoints file
+      ansible.builtin.include_vars:
+        file: /var/lib/osp-observability/scrape
+        name: scrape_endpoints
+
+    - debug: msg="the value of scrape_endpoints is {{ scrape_endpoints }}"
+    - name: Spawn containerized Prometheus agent with provided configuration
       include_role:
         name: /usr/share/ansible/roles/osp_observability
         tasks_from: configure_prometheus
       vars:
-        prometheus_config_basedir: {{ wdir }}/{{ container_name }}/config
+        prometheus_config_basedir: "{{ wdir }}/{{ container_name }}/config"
     - name: Spawn containerized Prometheus agent with provided configuration
       include_role:
         name: /usr/share/ansible/roles/spawn_container
@@ -28,7 +35,7 @@
         image: "{{ container_image }}"
         volumes:
           - "{{ prometheus_config_dir }}:/data:rw,z"
-          - "{{ prometheus_data_basedir }}:/etc/prometheus:ro,z"
+          - "{{ prometheus_data_dir }}:/etc/prometheus:ro,z"
         command: >
           --enable-feature=agent
           --config.file=/etc/prometheus/prometheus.yml
