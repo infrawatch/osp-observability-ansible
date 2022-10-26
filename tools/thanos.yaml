@@ -1,0 +1,74 @@
+---
+
+- name: Deploy minimal Thanos stack for testing purposes
+  hosts: Undercloud
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Prepare temporary directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0750'
+      with_items:
+        - /var/tmp/thanos
+        - /var/tmp/thanos/receive
+        - /var/tmp/thanos/receive/data
+        - /var/tmp/thanos/receive/config
+        - /var/tmp/thanos/query
+        - /var/tmp/thanos/query/config
+
+    - name: Spawn containerized Thanos Receive as remote write node
+      include_role:
+        name: /usr/share/ansible/roles/spawn_container
+        tasks_from: main
+      vars:
+        workdir: /var/tmp/thanos/receive
+        confdir: /var/tmp/thanos/receive/config
+        name: thanos_receive
+        image: quay.io/thanos/thanos:v0.21.0
+        user: root
+        volumes:
+          - /var/tmp/thanos/receive/data:/receive/data:rw,z
+        command: >
+          receive
+          --tsdb.path /receive/data
+          --grpc-address {{ ansible_default_ipv4.address }}:10907
+          --http-address {{ ansible_default_ipv4.address }}:10909
+          --remote-write.address 0.0.0.0:10908
+          --label receive_replica="0"
+          --label receive_cluster="test"
+
+    - name: Spawn containerized Thanos Query to provide HTTP interface for verification
+      include_role:
+        name: /usr/share/ansible/roles/spawn_container
+        tasks_from: main
+      vars:
+        workdir: /var/tmp/thanos/query
+        confdir: /var/tmp/thanos/query/config
+        name: thanos_query
+        image: quay.io/thanos/thanos:v0.21.0
+        user: root
+        command: >
+          query
+          --http-address 0.0.0.0:39090
+          --store {{ ansible_default_ipv4.address }}:10907
+
+    - name: Open necessary ports via iptables
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: "{{ item['port'] }}"
+        jump: ACCEPT
+        comment: "{{ item['description'] }}"
+      with_items:
+        - port: 10908
+          description: Accept Thanos remote write connections to thanos_receive.
+        - port: 39090
+          description: Accept HTTP connections to thanos_query
+
+    - name: Provide remote write URL for Prometheus
+      debug:
+        msg: "Node for remote write: 'http://{{ facter_networking['interfaces']['br-ctlplane']['ip'] }}:10908/api/v1/receive'"

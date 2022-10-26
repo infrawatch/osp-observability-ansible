@@ -1,0 +1,14 @@
+[Unit]
+Description=osp-observability-{{ name }}.service
+
+[Service]
+Restart=on-failure
+ExecStart=/usr/bin/podman start {{ name }}
+ExecStop=/usr/bin/podman stop -t 10 {{ name }}
+KillMode=none
+Type=forking
+PIDFile=/var/run/containers/storage/overlay-containers/{{ result.container.Id }}/userdata/conmon.pid
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,0 +1,5 @@
+---
+
+volumes: []
+libdir: /usr/share/osp-observability
+workdir: /var/lib/osp-observability

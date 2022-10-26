@@ -1,0 +1,42 @@
+---
+
+- name: Deploy Prometheus agent
+  hosts: "{{ prometheus_destination | default('controller-0') }}"
+  vars:
+    wdir: "{{ base_work_directory | default('/var/lib/osp-observability') }}"
+    container_name: "{{ prometheus_container_name | default('prometheus_agent') }}"
+    container_image: "{{ prometheus_image | default('quay.io/prometheus/prometheus:latest') }}"
+    scrape_config: "{{ prometheus_scrape_config | default('~/.osp-observability/scrape-endpoints.yaml') }}"
+    remote_write: "{{ prometheus_remote_write }}"
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Include scrape endpoints file
+      ansible.builtin.include_vars:
+        file: "{{ scrape_config }}"
+        name: scrape_endpoints
+    - debug: msg="the value of scrape_endpoints is {{ scrape_endpoints }}"
+    - name: Provide Prometheus agent configuration
+      include_role:
+        name: /usr/share/ansible/roles/osp_observability
+        tasks_from: configure_prometheus
+      vars:
+        prometheus_config_basedir: "{{ wdir }}/{{ container_name }}/config"
+    - name: Spawn containerized Prometheus agent with provided configuration
+      include_role:
+        name: /usr/share/ansible/roles/spawn_container
+        tasks_from: main
+      vars:
+        user: root
+        workdir: "{{ wdir }}"
+        confdir: "{{ wdir }}/{{ container_name }}"
+        name: "{{ container_name }}"
+        image: "{{ container_image }}"
+        volumes:
+          - "{{ prometheus_config_dir }}:/data:rw,z"
+          - "{{ prometheus_data_dir }}:/etc/prometheus:ro,z"
+        command: >
+          --enable-feature=agent
+          --config.file=/etc/prometheus/prometheus.yml
+          --storage.agent.path=/data
+          --web.listen-address=:9666

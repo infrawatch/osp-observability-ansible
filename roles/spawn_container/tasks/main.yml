@@ -1,0 +1,86 @@
+---
+
+- name: Check if mount points exist
+  include_tasks: volume_check.yml
+  with_items:
+    - "{{ volumes }}"
+  when: volumes|length>0
+
+- name: Prepare container log directory
+  file:
+    path: "/var/log/containers/{{ name }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0750'
+
+- name: Container cleanup
+  containers.podman.podman_container:
+    name: "{{ name }}"
+    state: absent
+
+- name: Start the container with defined volume mounts
+  containers.podman.podman_container:
+    name: "{{ name }}"
+    image: "{{ image }}"
+    user: "{{ user }}"
+    state: present
+    restart_policy: "always"
+    network: host
+    command: "{{ command }}"
+    volume: "{{ volumes }}"
+    generate_systemd:
+      container_prefix: "osp-observability"
+      path: /etc/systemd/system/
+      restart_policy: always
+  register: result_with_volumes
+  when: volumes|length>0
+
+- name: Start the container without defined volume mounts
+  containers.podman.podman_container:
+    name: "{{ name }}"
+    image: "{{ image }}"
+    user: "{{ user }}"
+    state: present
+    restart_policy: "always"
+    network: host
+    command: "{{ command }}"
+    generate_systemd:
+      container_prefix: "osp-observability"
+      path: /etc/systemd/system/
+      restart_policy: always
+  register: result_no_volumes
+  when: volumes|length==0
+
+- name: Get result
+  set_fact:
+    result: "{% if result_with_volumes.container is defined %}{{ result_with_volumes }}{% else %}{{ result_no_volumes }}{% endif %}"
+
+- name: Report result of container startup
+  debug:
+    var: result
+
+- name: Save container details
+  copy:
+    dest: "{{ confdir }}/container.json"
+    content: "{{ result.container | to_nice_json(indent=2, ensure_ascii=False) }}"
+  when: result.container is defined
+
+# generate_systemd appears not to work correctly with older podman versions
+- name: Check systemd file creation
+  find:
+    paths: /etc/systemd/system/
+    patterns: "osp-observability-{{ name }}*"
+  register: files
+
+- name: Create systemd file in case it was not created by podman
+  template:
+    src: systemd.service.j2
+    dest: "/etc/systemd/system/osp-observability-{{ name }}.service"
+  when: files.matched == 0
+
+- name: Start container via systemd
+  ansible.builtin.systemd:
+    name: "osp-observability-{{ name }}.service"
+    enabled: yes
+    state: started
