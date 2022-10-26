@@ -1,14 +1,12 @@
 ---
 
 - name: Check if given path exists
-  file:
+  stat:
     path: "{{ item.split(':')[0] }}"
-    state: file
-  check_mode: true
   ignore_errors: true
   register: its
 
 - name: Report missing volume
   fail:
     msg: "Volume mount {{ item }} invalid. Source {{ item.split(':')[0] }} does not exist."
-  when: its.state == 'absent'
+  when: not its.stat.exists
