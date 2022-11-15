@@ -1,0 +1,20 @@
+---
+- name: Deploy Sg-core 
+  hosts: "{{ prometheus_destination | default('controller-0') }}"
+  vars:
+    wdir: "{{ base_work_directory | default('/var/lib/osp-observability') }}"
+    ceilometer_pipeline_path: "{{ ceilometer_pipeline_path | default('/etc/ceilometer/pipeline.yaml') }}"
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Configure Ceilometer notification agent
+      include_role:
+        name: /usr/share/ansible/roles/osp_observability
+        tasks_from: configure_ceilometer
+      vars:
+        ceilometer_pipeline_path: "{{ ceilometer_pipeline_path }}"
+
+    - name: Configure sg-core
+      include_role:
+        name: /usr/share/ansible/roles/osp_observability
+        tasks_from: configure_sgcore

@@ -1,0 +1,15 @@
+---
+
+pluginDir: /tmp/plugins
+logLevel: debug
+transports:
+  - name: udp-socket
+    config:
+      uri: 127.0.0.1:{{ ceilometer_port }}
+    handlers:
+      - name: ceilometer-metrics
+applications:
+  - name: prometheus
+    config:
+        host: 0.0.0.0
+        port: {{ prometheus_port }}

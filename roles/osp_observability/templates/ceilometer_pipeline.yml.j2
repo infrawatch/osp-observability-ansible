@@ -1,0 +1,12 @@
+---
+
+sources:
+    - name: meter_source
+      meters:
+          - "*"
+      sinks:
+          - udp_sink
+sinks:
+    - name: udp_sink
+      publishers:
+          - udp://127.0.0.1:{{ ceilometer_port }}

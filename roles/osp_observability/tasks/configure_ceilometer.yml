@@ -1,0 +1,14 @@
+---
+
+- name: Create ceilometer pipeline.yml file
+  template:
+    src: ceilometer_pipeline.yml.j2
+    dest: "{{ ceilometer_pipeline_path }}"
+
+- name: Restart the notification agent .
+  shell: 
+    cmd: systemctl restart tripleo_ceilometer_agent_notification.service
+  register: ceilometer_notification_output
+
+- debug:
+    var: ceilometer_notification_output.stdout
