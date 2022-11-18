@@ -1,36 +1,19 @@
 ---
 
-- name: Clone the sg-core repo
-  become: false
-  git:
-    repo: 'https://github.com/infrawatch/sg-core.git'
-    dest: "{{ workdir }}/sg-core"
-    version: "{{ sgcore_git_branch }}"
-
-- name: Make sure the latest version of Go is installed.
-  dnf:
-    name: go
-    state: latest
-
-- name: Change the working directory to sg-core folder and run the build file.
-  shell: 
-    cmd: ./build.sh
-    chdir: "{{ workdir }}/sg-core"
-  register: build_output
-
-- debug:
-    var: build_output.stdout
-
 - name: Create sgcore_config.yml file
   template:
     src: sgcore_config.yml.j2
     dest: "{{ workdir }}/sg-core/sgcore_config.yml"
 
-- name: Run the sg-core server.
-  shell: 
-    cmd: ./sg-core -config sgcore_config.yml 
-    chdir: "{{ workdir }}/sg-core"
-  register: sg_core_output
-
-- debug:
-    var: sg_core_output.stdout
+- name: Spawn containerized sg-core with provided configuration
+  include_role:
+    name: /usr/share/ansible/roles/spawn_container
+    tasks_from: main
+  vars:
+    user: root
+    confdir: "{{ workdir }}/{{ container_name }}"
+    name: "{{ container_name }}"
+    image: "{{ container_image }}"
+    volumes:
+      - "{{ workdir }}/sg-core/sgcore_config.yml:/etc/sg-core.conf.yaml:z"
+    command: 

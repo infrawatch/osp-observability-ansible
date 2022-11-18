@@ -1,4 +1,11 @@
 ---
+- name: get service facts
+  service_facts:
+
+- name: check if ceilometer service is deployed
+  fail:
+    msg: Invalid Env, it doesn't contain ceilometer.
+  when: ansible_facts.services["tripleo_ceilometer_agent_notification.service"] is not defined
 
 - name: Create ceilometer pipeline.yml file
   template:

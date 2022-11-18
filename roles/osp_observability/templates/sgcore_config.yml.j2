@@ -1,15 +1,14 @@
 ---
-
-pluginDir: /tmp/plugins
-logLevel: debug
+plugindir: bin/
+loglevel: debug
 transports:
   - name: udp-socket
     config:
-      uri: 127.0.0.1:{{ ceilometer_port }}
+      uri:{{ hostvars[inventory_hostname].ansible_host }}:{{ ceilometer_port }}
     handlers:
       - name: ceilometer-metrics
 applications:
   - name: prometheus
     config:
-        host: 0.0.0.0
+        host: {{ hostvars[inventory_hostname].ansible_host }}
         port: {{ prometheus_port }}
