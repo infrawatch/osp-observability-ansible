@@ -5,8 +5,8 @@ sources:
       meters:
           - "*"
       sinks:
-          - udp_sink
+          - tcp_sink
 sinks:
-    - name: udp_sink
+    - name: tcp_sink
       publishers:
-          - udp://127.0.0.1:{{ ceilometer_port }}
+          - tcp://{{ hostvars[inventory_hostname].ansible_host }}:{{ ceilometer_port }}
