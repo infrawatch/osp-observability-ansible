@@ -2,8 +2,8 @@
 
 - name: Expose created Prometheus agent directories
   ansible.builtin.set_fact:
-    prometheus_config_dir: "{{ prometheus_config_basedir }}/data"
-    prometheus_data_dir: "{{ prometheus_config_basedir }}/etc/prometheus"
+    prometheus_config_dir: "{{ prometheus_config_basedir }}/etc/prometheus"
+    prometheus_data_dir: "{{ prometheus_config_basedir }}/data"
 
 - name: Prepare configuration and data directory for Prometheus agent
   ansible.builtin.file:
