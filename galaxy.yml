@@ -1,0 +1,14 @@
+namespace: "infrawatch"
+name: "osp_observability"
+version: "0.0.1"
+readme: "README.md"
+authors:
+    - "Red Hat CloudOps"
+license:
+    - "Apache 2"
+tags:
+    - observability
+    - openstack
+    - osp
+repository: "https://www.github.com/infrawatch/osp-observability-ansible"
+
