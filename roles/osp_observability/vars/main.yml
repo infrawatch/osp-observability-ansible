@@ -1,2 +1,0 @@
-prometheus_config_dir: "{{ prometheus_config_basedir }}/etc/prometheus"
-prometheus_data_dir: "{{ prometheus_config_basedir }}/data"
