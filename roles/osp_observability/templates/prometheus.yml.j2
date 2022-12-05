@@ -1,9 +1,7 @@
-#jinja2: trim_blocks:False
 global:
   scrape_interval: {{ prometheus_scrape_interval }}
   external_labels:
     agent_host: {{ ansible_fqdn }}
-    {% endif -%}
     {% if openstack_cloud_name -%}
     cloud_name: {{ openstack_cloud_name }}
 {% endif %}
