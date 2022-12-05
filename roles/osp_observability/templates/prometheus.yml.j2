@@ -1,9 +1,7 @@
 global:
   scrape_interval: {{ prometheus_scrape_interval }}
   external_labels:
-    {% if ansible_fqdn -%}
     agent_host: {{ ansible_fqdn }}
-    {% endif -%}
     {% if openstack_cloud_name -%}
     cloud_name: {{ openstack_cloud_name }}
     {% endif %}
@@ -18,7 +16,7 @@ scrape_configs:
 remote_write:
   {% for name, endpoint in remote_write.items() -%}
   - url: {{ endpoint.url }}
-    {% if endpoint.basic_user is defined and endpoint.basic_pass is defined -%}
+    {% if endpoint.basic_user.length() > 0 and endpoint.basic_pass.length() > 0 -%}
     basic_auth:
       username: {{ endpoint.basic_user }}
       password: {{ endpoint.basic_pass }}
