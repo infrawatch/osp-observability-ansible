@@ -10,14 +10,14 @@ global:
 {% endif %}
 
 scrape_configs:
-{%- for service, nodes in scrape_endpoints.items() %}
+  {% for service, nodes in prometheus_scrape_endpoints.items() -%}
   - job_name: {{ service }}
     static_configs:
       - targets: {{ nodes }}
 {% endfor %}
 
 remote_write:
-  {% for name, endpoint in remote_write.items() -%}
+  {% for name, endpoint in prometheus_remote_write.items() -%}
   - url: {{ endpoint.url }}
     {% if endpoint.basic_user is defined and endpoint.basic_pass is defined -%}
     basic_auth:
