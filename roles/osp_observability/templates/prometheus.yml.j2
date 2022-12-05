@@ -23,7 +23,7 @@ remote_write:
     {% endif -%}
     {% if endpoint.url | regex_search('^https://') -%}
     tls_config:
-      insecure_skip_verify: false
+      insecure_skip_verify: {{ endpoint.tls_insecure_skip_verify | default('false') }}
       server_name: {{ endpoint.url | regex_search('^https://(.*?)/', '\\1') | first }}
       {% if endpoint.ca_cert is defined -%}
       ca_file: /etc/prometheus/{{ name }}_CA.pem
