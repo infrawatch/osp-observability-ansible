@@ -16,7 +16,7 @@ scrape_configs:
 remote_write:
   {% for name, endpoint in remote_write.items() -%}
   - url: {{ endpoint.url }}
-    {% if endpoint.basic_user.length() > 0 and endpoint.basic_pass.length() > 0 -%}
+    {% if (endpoint.basic_user | length > 0) and (endpoint.basic_pass | length > 0) -%}
     basic_auth:
       username: {{ endpoint.basic_user }}
       password: {{ endpoint.basic_pass }}
