@@ -20,9 +20,8 @@
         path: "{{ prometheus_config_dir }}/prometheus.yml"
       register: prometheus_config
 
-    # - name: "Check for well-formed config file"
-    #   shell: yamllint {{ prometheus_config_dir }}/prometheus.yml
-    #   with_items: "{{ prometheus_config.content | b64decode | to_yaml }}"
+    - name: "Check for well-formed config file (HINT: podman exec -it instance cat /etc/prometheus/prometheus.yml)"
+      shell: "cat {{ prometheus_config_dir }}/prometheus.yml && yamllint -d '{rules: {line-length: {max: 100} } }' {{ prometheus_config_dir }}/prometheus.yml"
 
     - name: "Sanity check the contents of the config file"
       assert:

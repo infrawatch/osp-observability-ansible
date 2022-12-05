@@ -2,17 +2,34 @@
 global:
   scrape_interval: {{ prometheus_scrape_interval }}
   external_labels:
-    {% if ansible_fqdn %}agent_host: {{ ansible_fqdn }}{% endif %}
-    {% if openstack_cloud_name %}cloud_name: {{ openstack_cloud_name }}{% endif %}
+    {% if ansible_fqdn -%}
+    agent_host: {{ ansible_fqdn }}
+    {% endif -%}
+    {% if openstack_cloud_name -%}
+    cloud_name: {{ openstack_cloud_name }}
+{% endif %}
 
 scrape_configs:
 {%- for service, nodes in scrape_endpoints.items() %}
   - job_name: {{ service }}
     static_configs:
       - targets: {{ nodes }}
-{%- endfor %}
+{% endfor %}
 
 remote_write:
-{% for url in remote_write -%}
-  - url: {{ url }}
-{% endfor %}
+  {% for name, endpoint in remote_write.items() -%}
+  - url: {{ endpoint.url }}
+    {% if endpoint.basic_user is defined and endpoint.basic_pass is defined -%}
+    basic_auth:
+      username: {{ endpoint.basic_user }}
+      password: {{ endpoint.basic_pass }}
+    {% endif -%}
+    {% if endpoint.url | regex_search('^https://') -%}
+    tls_config:
+      insecure_skip_verify: false
+      server_name: {{ endpoint.url | regex_search('^https://(.*?)/', '\\1') | first }}
+      {% if endpoint.ca_cert is defined -%}
+      ca_file: /etc/prometheus/{{ name }}_CA.pem
+{%- endif -%}
+{%- endif -%}
+{%- endfor -%}
