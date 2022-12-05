@@ -5,28 +5,36 @@
   hosts: all
   gather_facts: false
   tasks:
-    - name: Some required external params
-      set_fact:
-        prometheus_config_dir: /etc/prometheus
+    - name: Some required matching vars
+      block:
+        - name: Set config dir
+          set_fact:
+            prometheus_config_dir: /etc/prometheus
+
+        - name: Set specific file locations
+          set_fact:
+            prometheus_config_file: "{{ prometheus_config_dir }}/prometheus.yml"
+            prometheus_ca_cert_file: "{{ prometheus_config_dir }}/stf_CA.pem"
 
     - name: "Check that prometheus config file exists"
       stat:
-        path: "{{ prometheus_config_dir }}/prometheus.yml"
+        path: "{{ prometheus_config_file }}"
       register: prometheus_yaml
       failed_when:
         - not prometheus_yaml.stat.exists
 
     - name: "Get the configuration"
       slurp:
-        path: "{{ prometheus_config_dir }}/prometheus.yml"
+        path: "{{ prometheus_config_file }}"
       register: prometheus_config
 
     - name: "Check for well-formed config file (HINT: podman exec -it instance cat /etc/prometheus/prometheus.yml)"
-      shell: "cat {{ prometheus_config_dir }}/prometheus.yml && yamllint -d '{rules: {line-length: {max: 100} } }' {{ prometheus_config_dir }}/prometheus.yml"
+      shell: "cat {{ prometheus_config_file }} && yamllint -d '{rules: {line-length: {max: 100} } }' {{ prometheus_config_file }}"
       changed_when: False
 
     - name: "Sanity check the contents of the config file"
       assert:
         that:
-          - '"scrape_interval: 1s" in prometheus_config.content | b64decode'
-        fail_msg: "Incorrect contents in prometheus.yml"
+          - '"agent_host: instance" in prometheus_config.content | b64decode'
+          - '"cloud_name: overcloud" in prometheus_config.content | b64decode'
+        fail_msg: "Incorrect contents in {{ prometheus_config_file }}"
