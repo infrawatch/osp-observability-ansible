@@ -1,0 +1,19 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include osp_observability"
+      include_role:
+        name: "osp_observability"
+        tasks_from: configure_prometheus
+      vars:
+        prometheus_config_basedir: "/"
+        scrape_endpoints:
+          collectd:
+            - "192.168.24.30:9103"
+        remote_write:
+          stf:
+            url: https://default-prometheus-proxy-service-telemetry.apps.FAKE.ocp.cluster/api/v1/write
+            basic_user: internal
+            basic_pass: Pl4iNt3xTp4a55
+            ca_cert:
