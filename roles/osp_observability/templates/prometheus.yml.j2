@@ -2,20 +2,18 @@
 global:
   scrape_interval: {{ prometheus_scrape_interval }}
   external_labels:
-    {% if ansible_fqdn -%}
     agent_host: {{ ansible_fqdn }}
     {% endif -%}
     {% if openstack_cloud_name -%}
     cloud_name: {{ openstack_cloud_name }}
 {% endif %}
 
-
 scrape_configs:
   {% for service, nodes in prometheus_scrape_endpoints.items() -%}
   - job_name: {{ service }}
     static_configs:
       - targets: {{ nodes }}
-{%- endfor %}
+{% endfor %}
 
 remote_write:
   {% for name, endpoint in prometheus_remote_write.items() -%}
