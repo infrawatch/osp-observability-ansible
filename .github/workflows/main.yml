@@ -10,4 +10,5 @@
             path: "${{ github.repository }}"
         - uses: gofrolist/molecule-action@v2
           with:
+            molecule_args: -d docker
             molecule_working_dir: "${{ github.repository }}/roles/osp_observability"
