@@ -33,8 +33,8 @@
         name: "{{ container_name }}"
         image: "{{ container_image }}"
         volumes:
-          - "{{ prometheus_config_dir }}:/data:rw,z"
-          - "{{ prometheus_data_dir }}:/etc/prometheus:ro,z"
+          - "{{ prometheus_config_dir }}:/etc/prometheus:ro,z"
+          - "{{ prometheus_data_dir }}:/data:rw,z"
         command: >
           --enable-feature=agent
           --config.file=/etc/prometheus/prometheus.yml
