@@ -1,3 +1,4 @@
+#jinja2: trim_blocks:False
 global:
   scrape_interval: {{ prometheus_scrape_interval }}
   external_labels:
@@ -5,6 +6,7 @@ global:
     {% if openstack_cloud_name -%}
     cloud_name: {{ openstack_cloud_name }}
     {% endif %}
+
 
 scrape_configs:
   {% for service, nodes in scrape_endpoints.items() -%}
@@ -30,3 +32,4 @@ remote_write:
       {% endif -%}
     {% endif -%}
   {% endfor %}
+
