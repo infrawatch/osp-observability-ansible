@@ -1,7 +1,16 @@
 ---
-
-libdir: /usr/share/osp-observability
-workdir: /var/lib/osp-observability
-
 openstack_cloud_name: overcloud
+prometheus_config_basedir: ""
+prometheus_remote_write:
+  stf:
+    url: https://default-prometheus-proxy-service-telemetry.apps.FAKE.ocp.cluster/api/v1/write
+    basic_user: internal
+    basic_pass: Pl4iNt3xTp4a55
+    ca_cert: |
+      -----BEGIN CERTIFICATE-----
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ
+      -----END CERTIFICATE-----
+prometheus_scrape_endpoints:
+  collectd:
+    - "localhost:9103"
 prometheus_scrape_interval: "1s"

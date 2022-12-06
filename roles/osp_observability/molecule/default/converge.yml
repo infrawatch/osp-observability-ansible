@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include osp_observability/configure_prometheus"
+      include_role:
+        name: "osp_observability"
+        tasks_from: configure_prometheus
