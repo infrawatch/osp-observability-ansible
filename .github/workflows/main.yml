@@ -1,0 +1,15 @@
+---
+  name: Molecule Test
+  on: [push, pull_request]
+  jobs:
+    molecule:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+          with:
+            path: "${{ github.repository }}"
+            molecule_working_dir: role/osp-observability-ansible
+        - uses: gofrolist/molecule-action@v2
+
+
+
