@@ -1,0 +1,19 @@
+---
+
+- name: Create sgcore_config.yml file
+  template:
+    src: sgcore_config.yml.j2
+    dest: "{{ workdir }}/sg-core/sgcore_config.yml"
+
+- name: Spawn containerized sg-core with provided configuration
+  include_role:
+    name: /usr/share/ansible/roles/spawn_container
+    tasks_from: main
+  vars:
+    user: root
+    confdir: "{{ workdir }}/{{ container_name }}"
+    name: "{{ container_name }}"
+    image: "{{ container_image }}"
+    volumes:
+      - "{{ workdir }}/sg-core/sgcore_config.yml:/etc/sg-core.conf.yaml:z"
+    command: 

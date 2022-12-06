@@ -14,3 +14,9 @@ prometheus_scrape_endpoints:
   collectd:
     - "localhost:9103"
 prometheus_scrape_interval: "1s"
+
+#sg-vars
+ceilometer_port: '6420'
+prometheus_port: '8081'
+ceilometer_pipeline_path: '/etc/ceilometer/pipeline.yaml'
+

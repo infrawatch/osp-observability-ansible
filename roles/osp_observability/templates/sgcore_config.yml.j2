@@ -1,0 +1,15 @@
+---
+plugindir: bin/
+loglevel: debug
+transports:
+  - name: socket
+    config:
+        socketaddr: {{ hostvars[inventory_hostname].ansible_host }}:{{ ceilometer_port }}
+        type: tcp
+    handlers:
+      - name: ceilometer-metrics
+applications:
+  - name: prometheus
+    config:
+        host: {{ hostvars[inventory_hostname].ansible_host }}
+        port: {{ prometheus_port }}
