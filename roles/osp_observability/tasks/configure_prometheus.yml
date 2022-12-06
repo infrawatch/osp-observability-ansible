@@ -23,3 +23,12 @@
     mode: '0644'
     dest: "{{ prometheus_config_dir }}/prometheus.yml"
     src: prometheus.yml.j2
+
+- name: "Create CA cert file for remote write endpoint"
+  ansible.builtin.copy:
+    dest: "{{ prometheus_config_basedir }}/etc/prometheus/{{ item.key }}_CA.pem"
+    owner: nobody
+    group: nobody
+    mode: '0644'
+    content: "{{ item.value.ca_cert }}"
+  loop: "{{ prometheus_remote_write | dict2items }}"
