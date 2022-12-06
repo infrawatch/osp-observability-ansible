@@ -8,8 +8,6 @@
         - uses: actions/checkout@v2
           with:
             path: "${{ github.repository }}"
-            molecule_working_dir: role/osp-observability-ansible
         - uses: gofrolist/molecule-action@v2
-
-
-
+          with:
+            molecule_working_dir: roles/osp_observability
