@@ -1,0 +1,12 @@
+---
+
+sources:
+    - name: meter_source
+      meters:
+          - "*"
+      sinks:
+          - tcp_sink
+sinks:
+    - name: tcp_sink
+      publishers:
+          - tcp://{{ hostvars[inventory_hostname].ansible_host }}:{{ ceilometer_port }}
