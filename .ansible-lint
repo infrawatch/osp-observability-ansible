@@ -5,3 +5,4 @@ skip_list:
    - '602'  # Don't compare to empty string
    - '701'  # Role info should contain platforms
    - '703'  # Should change default metadata
+   - 'fqcn'

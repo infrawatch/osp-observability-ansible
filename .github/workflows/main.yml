@@ -1,0 +1,14 @@
+---
+name: Molecule Test
+on: [push, pull_request]
+jobs:
+  molecule:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: "${{ github.repository }}"
+      - uses: gofrolist/molecule-action@v2
+        with:
+          molecule_args: -d docker
+          molecule_working_dir: "${{ github.repository }}/roles/osp_observability"

@@ -37,4 +37,25 @@
         that:
           - '"agent_host: instance" in prometheus_config.content | b64decode'
           - '"cloud_name: overcloud" in prometheus_config.content | b64decode'
+          - '"username: internal" in prometheus_config.content | b64decode'
+          - '"insecure_skip_verify: false" in prometheus_config.content | b64decode'
+          - '"ca_file: {{ prometheus_ca_cert_file }}" in prometheus_config.content | b64decode'
         fail_msg: "Incorrect contents in {{ prometheus_config_file }}"
+
+    - name: "Check that CA cert file exists"
+      stat:
+        path: "{{ prometheus_ca_cert_file }}"
+      register: ca_cert_pem
+      failed_when:
+        - not ca_cert_pem.stat.exists
+
+    - name: "Get the CA cert"
+      slurp:
+        path: "{{ prometheus_ca_cert_file }}"
+      register: ca_cert
+
+    - name: "Sanity check the contents of the CA cert file"
+      assert:
+        that:
+          - '"-----BEGIN CERTIFICATE-----" in ca_cert.content | b64decode'
+        fail_msg: "Incorrect contents in {{ prometheus_ca_cert_file }}"

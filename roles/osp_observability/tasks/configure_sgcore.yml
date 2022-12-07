@@ -1,13 +1,24 @@
 ---
 
+- name: Prepare configuration directory for sg-core
+  ansible.builtin.file:
+    path: "{{ workdir }}/sg-core/"
+    state: directory
+    owner: nobody
+    group: nobody
+    mode: '0750'
+
 - name: Create sgcore_config.yml file
   template:
     src: sgcore_config.yml.j2
     dest: "{{ workdir }}/sg-core/sgcore_config.yml"
+    owner: root
+    group: root
+    mode: '0644'
 
 - name: Spawn containerized sg-core with provided configuration
   include_role:
-    name: /usr/share/ansible/roles/spawn_container
+    name: spawn_container
     tasks_from: main
   vars:
     user: root
