@@ -1,8 +1,8 @@
 ---
-- name: get service facts
+- name: Get service facts
   service_facts:
 
-- name: check if ceilometer service is deployed
+- name: Check if ceilometer service is deployed
   fail:
     msg: Invalid Env, it doesn't contain ceilometer.
   when: ansible_facts.services["tripleo_ceilometer_agent_notification.service"] is not defined
@@ -11,11 +11,15 @@
   template:
     src: ceilometer_pipeline.yml.j2
     dest: "{{ ceilometer_pipeline_path }}"
+    owner: root
+    group: root
+    mode: '0644'
 
 - name: Restart the notification agent .
-  shell: 
-    cmd: systemctl restart tripleo_ceilometer_agent_notification.service
+  command: systemctl restart tripleo_ceilometer_agent_notification.service
   register: ceilometer_notification_output
+  changed_when: false
 
-- debug:
+- name: Show restart output
+  debug:
     var: ceilometer_notification_output.stdout
