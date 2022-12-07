@@ -2,10 +2,10 @@
 plugindir: bin/
 loglevel: debug
 transports:
-  - name: socket
-    config:
-        socketaddr: {{ hostvars[inventory_hostname].ansible_host }}:{{ ceilometer_port }}
-        type: tcp
+  - name: socket
+    config:
+      socketaddr: {{ hostvars[inventory_hostname].ansible_host }}:{{ ceilometer_port }}
+      type: tcp
     handlers:
       - name: ceilometer-metrics
 applications:
