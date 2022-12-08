@@ -14,8 +14,8 @@
     - name: Include scrape endpoints file
       ansible.builtin.include_vars:
         file: "{{ scrape_config }}"
-        name: scrape_endpoints
-    - debug: msg="the value of scrape_endpoints is {{ scrape_endpoints }}"
+        name: prometheus_scrape_endpoints
+    - debug: msg="the value of prometheus_scrape_endpoints is {{ prometheus_scrape_endpoints }}"
     - name: Provide Prometheus agent configuration
       include_role:
         name: /usr/share/ansible/roles/osp_observability
