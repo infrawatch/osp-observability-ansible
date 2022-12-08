@@ -11,4 +11,8 @@ tags:
     - openstack
     - osp
 repository: "https://www.github.com/infrawatch/osp-observability-ansible"
+build_ignore:
+  - "tools"
+  - ".*"
+  - "*/.*"
 
